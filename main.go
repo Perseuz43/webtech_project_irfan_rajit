@@ -4,9 +4,25 @@ import (
     "html/template"
     "log"
     "net/http"
+
+    "github.com/Perseuz43/webtech_project_irfan_rajit/config"
+    "github.com/Perseuz43/webtech_project_irfan_rajit/database"
 )
 
 func main() {
+    cfg := config.Load()
+
+    db, err := database.Connect(cfg.DBPath)
+    if err != nil {
+        log.Fatal("database connection failed: ", err)
+    }
+    defer db.Close()
+
+    if err := database.Migrate(db); err != nil {
+        log.Fatal("database migration failed: ", err)
+    }
+    log.Println("Database connected and migrated:", cfg.DBPath)
+
     tmpl := template.Must(template.ParseFiles("templates/home.html"))
 
     mux := http.NewServeMux()
@@ -22,6 +38,6 @@ func main() {
         }
     })
 
-    log.Println("Server running on http://localhost:8080")
-    log.Fatal(http.ListenAndServe(":8080", mux))
+    log.Println("Server running on http://localhost:" + cfg.Port)
+    log.Fatal(http.ListenAndServe(":"+cfg.Port, mux))
 }
