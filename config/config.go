@@ -3,15 +3,17 @@
 import "os"
 
 type Config struct {
-    Port   string
-    DBPath string
+    Port          string
+    DBPath        string
+    AdminPassword string
 }
 
 // Load reads settings from environment variables, with sensible defaults.
 func Load() Config {
     return Config{
-        Port:   getEnv("PORT", "8080"),
-        DBPath: getEnv("DB_PATH", "school.db"),
+        Port:          getEnv("PORT", "8080"),
+        DBPath:        getEnv("DB_PATH", "school.db"),
+        AdminPassword: getEnv("ADMIN_PASSWORD", "admin123"),
     }
 }
 
