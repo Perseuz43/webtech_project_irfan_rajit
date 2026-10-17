@@ -1,0 +1,16 @@
+﻿# binaries
+*.exe
+webtech_project_irfan_rajit
+/bin/
+
+# secrets
+.env
+
+# database files (if using SQLite)
+*.db
+*.sqlite
+
+# editor files
+.vscode/
+.idea/
+.DS_Store
