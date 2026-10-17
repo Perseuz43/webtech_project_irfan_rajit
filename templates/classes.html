@@ -1,0 +1,31 @@
+﻿{{define "content"}}
+<h2>Classes</h2>
+<p><a href="/admin">&larr; Admin area</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+<form method="post" action="/admin/classes" class="inline-form">
+  <input type="text" name="name" placeholder="e.g. Class 1" required maxlength="50">
+  <button type="submit">Add class</button>
+</form>
+
+{{if .Data}}
+<table>
+  <tr><th>Class</th><th>Sections</th><th>Subjects</th><th>Actions</th></tr>
+  {{range .Data}}
+  <tr>
+    <td>{{.Name}}</td>
+    <td>{{.SectionCount}}</td>
+    <td>{{.SubjectCount}}</td>
+    <td>
+      <a href="/admin/classes/{{.ID}}">Manage</a>
+      <form method="post" action="/admin/classes/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this class and all its sections and subjects?')">
+        <button type="submit" class="danger">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p>No classes yet. Add the first one above.</p>
+{{end}}
+{{end}}

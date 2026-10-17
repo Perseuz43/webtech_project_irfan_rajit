@@ -53,3 +53,19 @@ button {
 button:hover { background: #1f4e79; }
 
 .error { color: #b00020; font-weight: bold; }
+
+table { border-collapse: collapse; background: white; margin-top: 1rem; }
+th, td { padding: 0.6rem 1rem; border-bottom: 1px solid #ddd; text-align: left; }
+
+.inline-form { display: flex; gap: 0.5rem; align-items: center; margin: 1rem 0; }
+.inline-form input { width: 260px; }
+.inline-form button { margin-top: 0; }
+
+form.inline { display: inline; margin-left: 0.5rem; }
+form.inline button { margin-top: 0; }
+
+button.danger { background: #b00020; }
+button.danger:hover { background: #7f0017; }
+
+.columns { display: flex; gap: 3rem; flex-wrap: wrap; }
+.columns section { flex: 1; min-width: 280px; }

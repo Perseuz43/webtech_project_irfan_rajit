@@ -42,6 +42,7 @@ func main() {
 
     requireLogin := middleware.RequireLogin(sm)
     requireAdmin := middleware.RequireRole(sm, "admin")
+    admin := func(h http.HandlerFunc) http.Handler { return requireAdmin(h) }
 
     mux := http.NewServeMux()
 
@@ -54,10 +55,27 @@ func main() {
     mux.HandleFunc("POST /login", app.Login)
     mux.HandleFunc("POST /logout", app.Logout)
 
-    // protected pages
+    // logged-in pages
     mux.Handle("GET /dashboard", requireLogin(http.HandlerFunc(app.Dashboard)))
-    mux.Handle("GET /admin", requireAdmin(http.HandlerFunc(app.AdminHome)))
+
+    // admin pages
+    mux.Handle("GET /admin", admin(app.AdminHome))
+
+    mux.Handle("GET /admin/classes", admin(app.ClassList))
+    mux.Handle("POST /admin/classes", admin(app.ClassCreate))
+    mux.Handle("GET /admin/classes/{id}", admin(app.ClassDetail))
+    mux.Handle("POST /admin/classes/{id}/rename", admin(app.ClassRename))
+    mux.Handle("POST /admin/classes/{id}/delete", admin(app.ClassDelete))
+
+    mux.Handle("POST /admin/classes/{id}/sections", admin(app.SectionCreate))
+    mux.Handle("POST /admin/classes/{id}/sections/{sid}/delete", admin(app.SectionDelete))
+
+    mux.Handle("POST /admin/classes/{id}/subjects", admin(app.SubjectCreate))
+    mux.Handle("POST /admin/classes/{id}/subjects/{sid}/delete", admin(app.SubjectDelete))
+
+    // block cross-site form submissions (CSRF protection)
+    cop := http.NewCrossOriginProtection()
 
     log.Println("Server running on http://localhost:" + cfg.Port)
-    log.Fatal(http.ListenAndServe(":"+cfg.Port, sm.LoadAndSave(mux)))
+    log.Fatal(http.ListenAndServe(":"+cfg.Port, sm.LoadAndSave(cop.Handler(mux))))
 }
