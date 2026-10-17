@@ -1,12 +1,17 @@
 ﻿package main
 
 import (
-    "html/template"
     "log"
     "net/http"
+    "time"
+
+    "github.com/alexedwards/scs/v2"
 
     "github.com/Perseuz43/webtech_project_irfan_rajit/config"
     "github.com/Perseuz43/webtech_project_irfan_rajit/database"
+    "github.com/Perseuz43/webtech_project_irfan_rajit/handlers"
+    "github.com/Perseuz43/webtech_project_irfan_rajit/middleware"
+    "github.com/Perseuz43/webtech_project_irfan_rajit/models"
 )
 
 func main() {
@@ -23,21 +28,36 @@ func main() {
     }
     log.Println("Database connected and migrated:", cfg.DBPath)
 
-    tmpl := template.Must(template.ParseFiles("templates/home.html"))
+    if err := models.SeedAdmin(db, cfg.AdminPassword); err != nil {
+        log.Fatal("creating default admin failed: ", err)
+    }
+
+    sm := scs.New()
+    sm.Lifetime = 12 * time.Hour
+
+    app, err := handlers.New(db, sm)
+    if err != nil {
+        log.Fatal("loading templates failed: ", err)
+    }
+
+    requireLogin := middleware.RequireLogin(sm)
+    requireAdmin := middleware.RequireRole(sm, "admin")
 
     mux := http.NewServeMux()
 
     // serve CSS/JS files
     mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-    // home page
-    mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
-        data := map[string]string{"Title": "School Management System"}
-        if err := tmpl.Execute(w, data); err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-        }
-    })
+    // public pages
+    mux.HandleFunc("GET /{$}", app.Home)
+    mux.HandleFunc("GET /login", app.LoginForm)
+    mux.HandleFunc("POST /login", app.Login)
+    mux.HandleFunc("POST /logout", app.Logout)
+
+    // protected pages
+    mux.Handle("GET /dashboard", requireLogin(http.HandlerFunc(app.Dashboard)))
+    mux.Handle("GET /admin", requireAdmin(http.HandlerFunc(app.AdminHome)))
 
     log.Println("Server running on http://localhost:" + cfg.Port)
-    log.Fatal(http.ListenAndServe(":"+cfg.Port, mux))
+    log.Fatal(http.ListenAndServe(":"+cfg.Port, sm.LoadAndSave(mux)))
 }

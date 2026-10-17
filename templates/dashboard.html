@@ -1,0 +1,7 @@
+﻿{{define "content"}}
+<h2>Dashboard</h2>
+<p>Welcome, {{.User.Username}}! You are logged in as <strong>{{.User.Role}}</strong>.</p>
+{{if eq .User.Role "admin"}}
+  <p><a href="/admin">Go to the admin area</a></p>
+{{end}}
+{{end}}
