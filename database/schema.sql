@@ -50,3 +50,13 @@ CREATE TABLE IF NOT EXISTS teacher_subjects (
     subject_id INTEGER NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
     PRIMARY KEY (teacher_id, subject_id)
 );
+
+CREATE TABLE IF NOT EXISTS attendance (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    date       TEXT NOT NULL,
+    status     TEXT NOT NULL CHECK (status IN ('present', 'late', 'absent')),
+    UNIQUE (student_id, date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_attendance_date ON attendance(date);
