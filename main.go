@@ -44,6 +44,8 @@ func main() {
     requireAdmin := middleware.RequireRole(sm, "admin")
     requireStaff := middleware.RequireRole(sm, "admin", "teacher")
     requireStudent := middleware.RequireRole(sm, "student")
+	requireParent := middleware.RequireRole(sm, "parent")
+	requireParent := middleware.RequireRole(sm, "parent")
 
     admin := func(h http.HandlerFunc) http.Handler { return requireAdmin(h) }
     staff := func(h http.HandlerFunc) http.Handler { return requireStaff(h) }
@@ -90,6 +92,30 @@ func main() {
     mux.Handle("POST /admin/teachers/{id}", admin(app.TeacherUpdate))
     mux.Handle("POST /admin/teachers/{id}/subjects", admin(app.TeacherSubjects))
     mux.Handle("POST /admin/teachers/{id}/delete", admin(app.TeacherDelete))
+	
+	
+	mux.Handle("GET /admin/parents", admin(app.ParentList))
+	mux.Handle("GET /admin/parents/new", admin(app.ParentNewForm))
+	mux.Handle("POST /admin/parents", admin(app.ParentCreate))
+	mux.Handle("GET /admin/parents/{id}/edit", admin(app.ParentEditForm))
+	mux.Handle("POST /admin/parents/{id}", admin(app.ParentUpdate))
+	mux.Handle("POST /admin/parents/{id}/children", admin(app.ParentChildren))
+	mux.Handle("POST /admin/parents/{id}/delete", admin(app.ParentDelete))
+	
+	// parents: view only their own linked children
+	mux.Handle("GET /children/{id}/attendance", requireParent(http.HandlerFunc(app.ChildAttendance)))
+	
+	
+	mux.Handle("GET /admin/parents", admin(app.ParentList))
+	mux.Handle("GET /admin/parents/new", admin(app.ParentNewForm))
+	mux.Handle("POST /admin/parents", admin(app.ParentCreate))
+	mux.Handle("GET /admin/parents/{id}/edit", admin(app.ParentEditForm))
+	mux.Handle("POST /admin/parents/{id}", admin(app.ParentUpdate))
+	mux.Handle("POST /admin/parents/{id}/children", admin(app.ParentChildren))
+	mux.Handle("POST /admin/parents/{id}/delete", admin(app.ParentDelete))
+	
+	// parents: view only their own linked children
+	mux.Handle("GET /children/{id}/attendance", requireParent(http.HandlerFunc(app.ChildAttendance)))
 
     // attendance: admins and teachers mark and report, students view their own
     mux.Handle("GET /attendance", staff(app.AttendancePage))
