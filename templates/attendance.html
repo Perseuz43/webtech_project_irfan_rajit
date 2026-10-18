@@ -1,0 +1,56 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>Take attendance</h2>
+<p><a href="/dashboard">&larr; Dashboard</a> &nbsp;|&nbsp; <a href="/attendance/report">Attendance report</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+{{if $d.Saved}}<p class="success">Attendance saved.</p>{{end}}
+
+{{if $d.Classes}}
+<form method="get" action="/attendance" class="inline-form wrap">
+  <select id="class_id" name="class_id" required>
+    <option value="">Choose a class</option>
+    {{range $d.Classes}}
+    <option value="{{.ID}}" {{if eq .ID $d.ClassID}}selected{{end}}>{{.Name}}</option>
+    {{end}}
+  </select>
+  <select id="section_id" name="section_id">
+    <option value="">All sections</option>
+    {{range $d.Sections}}
+    <option value="{{.ID}}" data-class="{{.ClassID}}" {{if eq .ID $d.SectionID}}selected{{end}}>{{.Name}}</option>
+    {{end}}
+  </select>
+  <input type="date" name="date" value="{{$d.Date}}" max="{{$d.Today}}" required>
+  <button type="submit">Load students</button>
+</form>
+{{else}}
+<p class="error">No classes are available to you yet. Teachers only see classes where the admin has assigned them a subject.</p>
+{{end}}
+
+{{if $d.Loaded}}
+  {{if $d.Students}}
+  <form method="post" action="/attendance">
+    <input type="hidden" name="class_id" value="{{$d.ClassID}}">
+    <input type="hidden" name="section_id" value="{{if $d.SectionID}}{{$d.SectionID}}{{end}}">
+    <input type="hidden" name="date" value="{{$d.Date}}">
+    <p>Date: <strong>{{$d.Date}}</strong>. Students who are not marked yet start as present.</p>
+    <table>
+      <tr><th>Roll</th><th>Name</th><th>Present</th><th>Late</th><th>Absent</th></tr>
+      {{range $d.Students}}
+      <tr>
+        <td>{{.Roll}}</td>
+        <td>{{.Name}}</td>
+        <td><input type="radio" name="status_{{.ID}}" value="present" {{if eq .Status "present"}}checked{{end}}></td>
+        <td><input type="radio" name="status_{{.ID}}" value="late" {{if eq .Status "late"}}checked{{end}}></td>
+        <td><input type="radio" name="status_{{.ID}}" value="absent" {{if eq .Status "absent"}}checked{{end}}></td>
+      </tr>
+      {{end}}
+    </table>
+    <button type="submit">Save attendance</button>
+  </form>
+  {{else}}
+  <p>There are no students in this class or section yet.</p>
+  {{end}}
+{{end}}
+
+<script src="/static/js/student-form.js"></script>
+{{end}}

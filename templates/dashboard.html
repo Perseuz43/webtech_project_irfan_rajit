@@ -5,6 +5,12 @@
 {{if eq .User.Role "admin"}}
   <p><a href="/admin">Go to the admin area</a></p>
 {{end}}
+{{if or (eq .User.Role "admin") (eq .User.Role "teacher")}}
+  <p><a href="/attendance">Take attendance</a> &nbsp;|&nbsp; <a href="/attendance/report">Attendance report</a></p>
+{{end}}
+{{if eq .User.Role "student"}}
+  <p><a href="/my-attendance">My attendance</a></p>
+{{end}}
 
 {{with .Data}}
   {{$d := .}}

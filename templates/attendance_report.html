@@ -1,0 +1,52 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>Attendance report</h2>
+<p><a href="/dashboard">&larr; Dashboard</a> &nbsp;|&nbsp; <a href="/attendance">Take attendance</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+{{if $d.Classes}}
+<form method="get" action="/attendance/report" class="inline-form wrap">
+  <select id="class_id" name="class_id" required>
+    <option value="">Choose a class</option>
+    {{range $d.Classes}}
+    <option value="{{.ID}}" {{if eq .ID $d.ClassID}}selected{{end}}>{{.Name}}</option>
+    {{end}}
+  </select>
+  <select id="section_id" name="section_id">
+    <option value="">All sections</option>
+    {{range $d.Sections}}
+    <option value="{{.ID}}" data-class="{{.ClassID}}" {{if eq .ID $d.SectionID}}selected{{end}}>{{.Name}}</option>
+    {{end}}
+  </select>
+  <label class="check">From <input type="date" name="from" value="{{$d.From}}" required></label>
+  <label class="check">To <input type="date" name="to" value="{{$d.To}}" required></label>
+  <button type="submit">Show report</button>
+</form>
+{{else}}
+<p class="error">No classes are available to you yet. Teachers only see classes where the admin has assigned them a subject.</p>
+{{end}}
+
+{{if $d.Loaded}}
+  {{if $d.Rows}}
+  <p>From <strong>{{$d.From}}</strong> to <strong>{{$d.To}}</strong>. Late counts as attended in the percentage.</p>
+  <table>
+    <tr><th>Roll</th><th>Name</th><th>Present</th><th>Late</th><th>Absent</th><th>Days recorded</th><th>Attendance</th></tr>
+    {{range $d.Rows}}
+    <tr>
+      <td>{{.Roll}}</td>
+      <td>{{.Name}}</td>
+      <td>{{.Present}}</td>
+      <td>{{.Late}}</td>
+      <td>{{.Absent}}</td>
+      <td>{{.Total}}</td>
+      <td>{{if .Total}}{{printf "%.1f" .Percent}}%{{else}}-{{end}}</td>
+    </tr>
+    {{end}}
+  </table>
+  {{else}}
+  <p>There are no students in this class or section.</p>
+  {{end}}
+{{end}}
+
+<script src="/static/js/student-form.js"></script>
+{{end}}

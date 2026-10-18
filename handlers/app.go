@@ -36,6 +36,7 @@ func New(db *sql.DB, sm *scs.SessionManager) (*App, error) {
         "classes", "class_detail",
         "students", "student_form",
         "teachers", "teacher_form",
+		"attendance", "my_attendance", "attendance_report",
     }
     tmpls := make(map[string]*template.Template)
     for _, p := range pages {

@@ -42,7 +42,11 @@ func main() {
 
     requireLogin := middleware.RequireLogin(sm)
     requireAdmin := middleware.RequireRole(sm, "admin")
+    requireStaff := middleware.RequireRole(sm, "admin", "teacher")
+    requireStudent := middleware.RequireRole(sm, "student")
+
     admin := func(h http.HandlerFunc) http.Handler { return requireAdmin(h) }
+    staff := func(h http.HandlerFunc) http.Handler { return requireStaff(h) }
 
     mux := http.NewServeMux()
 
@@ -85,6 +89,12 @@ func main() {
     mux.Handle("POST /admin/teachers/{id}", admin(app.TeacherUpdate))
     mux.Handle("POST /admin/teachers/{id}/subjects", admin(app.TeacherSubjects))
     mux.Handle("POST /admin/teachers/{id}/delete", admin(app.TeacherDelete))
+
+    // attendance: admins and teachers mark and report, students view their own
+    mux.Handle("GET /attendance", staff(app.AttendancePage))
+    mux.Handle("POST /attendance", staff(app.AttendanceSave))
+    mux.Handle("GET /attendance/report", staff(app.AttendanceReport))
+    mux.Handle("GET /my-attendance", requireStudent(http.HandlerFunc(app.MyAttendance)))
 
     // block cross-site form submissions (CSRF protection)
     cop := http.NewCrossOriginProtection()
