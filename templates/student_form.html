@@ -1,0 +1,51 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{if $d.Editing}}Edit student{{else}}Add student{{end}}</h2>
+<p><a href="/admin/students">&larr; All students</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+{{if not $d.Classes}}<p class="error">There are no classes yet. <a href="/admin/classes">Create a class first</a>.</p>{{end}}
+
+<form method="post" action="{{$d.Action}}" class="card wide">
+  <label for="name">Full name</label>
+  <input type="text" id="name" name="name" value="{{$d.Form.Name}}" required maxlength="100">
+
+  <label for="roll">Roll number</label>
+  <input type="number" id="roll" name="roll" value="{{$d.Form.Roll}}" required min="1">
+
+  <label for="class_id">Class</label>
+  <select id="class_id" name="class_id" required>
+    <option value="">Choose a class</option>
+    {{range $d.Classes}}
+    <option value="{{.ID}}" {{if eq (printf "%d" .ID) $d.Form.ClassID}}selected{{end}}>{{.Name}}</option>
+    {{end}}
+  </select>
+
+  <label for="section_id">Section</label>
+  <select id="section_id" name="section_id">
+    <option value="">No section</option>
+    {{range $d.Sections}}
+    <option value="{{.ID}}" data-class="{{.ClassID}}" {{if eq (printf "%d" .ID) $d.Form.SectionID}}selected{{end}}>{{.Name}}</option>
+    {{end}}
+  </select>
+
+  <label for="guardian_name">Guardian name</label>
+  <input type="text" id="guardian_name" name="guardian_name" value="{{$d.Form.GuardianName}}" maxlength="100">
+
+  <label for="phone">Phone</label>
+  <input type="text" id="phone" name="phone" value="{{$d.Form.Phone}}" maxlength="20">
+
+  {{if $d.Editing}}
+    <p>Login username: <strong>{{$d.Username}}</strong></p>
+  {{else}}
+    <label for="username">Login username</label>
+    <input type="text" id="username" name="username" value="{{$d.Form.Username}}" required maxlength="30" autocomplete="off">
+
+    <label for="password">Starting password</label>
+    <input type="password" id="password" name="password" required minlength="6" maxlength="72" autocomplete="new-password">
+  {{end}}
+
+  <button type="submit">{{if $d.Editing}}Save changes{{else}}Add student{{end}}</button>
+</form>
+
+<script src="/static/js/student-form.js"></script>
+{{end}}

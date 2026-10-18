@@ -1,0 +1,46 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{if $d.Editing}}Edit teacher{{else}}Add teacher{{end}}</h2>
+<p><a href="/admin/teachers">&larr; All teachers</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+<form method="post" action="{{$d.Action}}" class="card wide">
+  <label for="name">Full name</label>
+  <input type="text" id="name" name="name" value="{{$d.Form.Name}}" required maxlength="100">
+
+  <label for="qualification">Qualification</label>
+  <input type="text" id="qualification" name="qualification" value="{{$d.Form.Qualification}}" maxlength="100">
+
+  <label for="phone">Phone</label>
+  <input type="text" id="phone" name="phone" value="{{$d.Form.Phone}}" maxlength="20">
+
+  {{if $d.Editing}}
+    <p>Login username: <strong>{{$d.Username}}</strong></p>
+  {{else}}
+    <label for="username">Login username</label>
+    <input type="text" id="username" name="username" value="{{$d.Form.Username}}" required maxlength="30" autocomplete="off">
+
+    <label for="password">Starting password</label>
+    <input type="password" id="password" name="password" required minlength="6" maxlength="72" autocomplete="new-password">
+  {{end}}
+
+  <button type="submit">{{if $d.Editing}}Save changes{{else}}Add teacher{{end}}</button>
+</form>
+
+{{if $d.Editing}}
+<h3>Subjects taught</h3>
+{{if $d.Subjects}}
+<form method="post" action="/admin/teachers/{{$d.ID}}/subjects" class="card wide">
+  {{range $d.Subjects}}
+  <label class="check">
+    <input type="checkbox" name="subject_ids" value="{{.ID}}" {{if .Assigned}}checked{{end}}>
+    {{.ClassName}} - {{.Name}}
+  </label>
+  {{end}}
+  <button type="submit">Save subjects</button>
+</form>
+{{else}}
+<p>No subjects exist yet. Add some under <a href="/admin/classes">classes</a> first.</p>
+{{end}}
+{{end}}
+{{end}}

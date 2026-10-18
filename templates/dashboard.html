@@ -1,7 +1,45 @@
 ﻿{{define "content"}}
 <h2>Dashboard</h2>
 <p>Welcome, {{.User.Username}}! You are logged in as <strong>{{.User.Role}}</strong>.</p>
+
 {{if eq .User.Role "admin"}}
   <p><a href="/admin">Go to the admin area</a></p>
+{{end}}
+
+{{with .Data}}
+  {{$d := .}}
+
+  {{with .Student}}
+  <h3>My profile</h3>
+  <table class="profile">
+    <tr><th>Name</th><td>{{.Name}}</td></tr>
+    <tr><th>Roll number</th><td>{{.Roll}}</td></tr>
+    <tr><th>Class</th><td>{{if .ClassName}}{{.ClassName}}{{else}}-{{end}}</td></tr>
+    <tr><th>Section</th><td>{{if .SectionName}}{{.SectionName}}{{else}}-{{end}}</td></tr>
+    <tr><th>Guardian</th><td>{{.GuardianName}}</td></tr>
+    <tr><th>Phone</th><td>{{.Phone}}</td></tr>
+  </table>
+  {{end}}
+
+  {{with .Teacher}}
+  <h3>My profile</h3>
+  <table class="profile">
+    <tr><th>Name</th><td>{{.Name}}</td></tr>
+    <tr><th>Qualification</th><td>{{.Qualification}}</td></tr>
+    <tr><th>Phone</th><td>{{.Phone}}</td></tr>
+  </table>
+
+  <h3>My subjects</h3>
+  {{if $d.Subjects}}
+  <table>
+    <tr><th>Class</th><th>Subject</th></tr>
+    {{range $d.Subjects}}
+    <tr><td>{{.ClassName}}</td><td>{{.Name}}</td></tr>
+    {{end}}
+  </table>
+  {{else}}
+  <p>No subjects have been assigned to you yet.</p>
+  {{end}}
+  {{end}}
 {{end}}
 {{end}}

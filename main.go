@@ -66,12 +66,25 @@ func main() {
     mux.Handle("GET /admin/classes/{id}", admin(app.ClassDetail))
     mux.Handle("POST /admin/classes/{id}/rename", admin(app.ClassRename))
     mux.Handle("POST /admin/classes/{id}/delete", admin(app.ClassDelete))
-
     mux.Handle("POST /admin/classes/{id}/sections", admin(app.SectionCreate))
     mux.Handle("POST /admin/classes/{id}/sections/{sid}/delete", admin(app.SectionDelete))
-
     mux.Handle("POST /admin/classes/{id}/subjects", admin(app.SubjectCreate))
     mux.Handle("POST /admin/classes/{id}/subjects/{sid}/delete", admin(app.SubjectDelete))
+
+    mux.Handle("GET /admin/students", admin(app.StudentList))
+    mux.Handle("GET /admin/students/new", admin(app.StudentNewForm))
+    mux.Handle("POST /admin/students", admin(app.StudentCreate))
+    mux.Handle("GET /admin/students/{id}/edit", admin(app.StudentEditForm))
+    mux.Handle("POST /admin/students/{id}", admin(app.StudentUpdate))
+    mux.Handle("POST /admin/students/{id}/delete", admin(app.StudentDelete))
+
+    mux.Handle("GET /admin/teachers", admin(app.TeacherList))
+    mux.Handle("GET /admin/teachers/new", admin(app.TeacherNewForm))
+    mux.Handle("POST /admin/teachers", admin(app.TeacherCreate))
+    mux.Handle("GET /admin/teachers/{id}/edit", admin(app.TeacherEditForm))
+    mux.Handle("POST /admin/teachers/{id}", admin(app.TeacherUpdate))
+    mux.Handle("POST /admin/teachers/{id}/subjects", admin(app.TeacherSubjects))
+    mux.Handle("POST /admin/teachers/{id}/delete", admin(app.TeacherDelete))
 
     // block cross-site form submissions (CSRF protection)
     cop := http.NewCrossOriginProtection()

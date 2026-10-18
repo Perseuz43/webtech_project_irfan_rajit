@@ -1,0 +1,28 @@
+﻿{{define "content"}}
+<h2>Teachers</h2>
+<p><a href="/admin">&larr; Admin area</a></p>
+<p><a href="/admin/teachers/new" class="button">Add teacher</a></p>
+
+{{if .Data}}
+<table>
+  <tr><th>Name</th><th>Qualification</th><th>Phone</th><th>Subjects</th><th>Username</th><th>Actions</th></tr>
+  {{range .Data}}
+  <tr>
+    <td>{{.Name}}</td>
+    <td>{{.Qualification}}</td>
+    <td>{{.Phone}}</td>
+    <td>{{.SubjectCount}}</td>
+    <td>{{.Username}}</td>
+    <td class="actions">
+      <a href="/admin/teachers/{{.ID}}/edit">Edit</a>
+      <form method="post" action="/admin/teachers/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this teacher and their login account?')">
+        <button type="submit" class="danger">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p>No teachers yet.</p>
+{{end}}
+{{end}}

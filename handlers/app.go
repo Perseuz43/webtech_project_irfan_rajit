@@ -26,12 +26,17 @@ type PageData struct {
     Title string
     User  *SessionUser
     Error string
-	Data  any
+    Data  any
 }
 
 // New parses every page together with the shared layout.
 func New(db *sql.DB, sm *scs.SessionManager) (*App, error) {
-    pages := []string{"home", "login", "dashboard", "admin", "classes", "class_detail"}
+    pages := []string{
+        "home", "login", "dashboard", "admin",
+        "classes", "class_detail",
+        "students", "student_form",
+        "teachers", "teacher_form",
+    }
     tmpls := make(map[string]*template.Template)
     for _, p := range pages {
         t, err := template.ParseFiles("templates/layout.html", "templates/"+p+".html")

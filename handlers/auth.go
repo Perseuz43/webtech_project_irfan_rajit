@@ -70,9 +70,6 @@ func (a *App) Logout(w http.ResponseWriter, r *http.Request) {
     http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
-func (a *App) Dashboard(w http.ResponseWriter, r *http.Request) {
-    a.render(w, r, "dashboard", http.StatusOK, PageData{Title: "Dashboard"})
-}
 
 func (a *App) AdminHome(w http.ResponseWriter, r *http.Request) {
     a.render(w, r, "admin", http.StatusOK, PageData{Title: "Admin Area"})

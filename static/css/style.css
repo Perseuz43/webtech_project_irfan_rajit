@@ -69,3 +69,35 @@ button.danger:hover { background: #7f0017; }
 
 .columns { display: flex; gap: 3rem; flex-wrap: wrap; }
 .columns section { flex: 1; min-width: 280px; }
+
+select {
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: white;
+}
+
+.card.wide { max-width: 520px; }
+
+a.button {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  background: #2e75b6;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+}
+a.button:hover { background: #1f4e79; }
+
+label.check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: normal;
+}
+label.check input { width: auto; }
+
+table.profile th { width: 160px; }
+td.actions { white-space: nowrap; }
