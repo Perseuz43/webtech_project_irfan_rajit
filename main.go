@@ -58,6 +58,7 @@ func main() {
     mux.HandleFunc("GET /login", app.LoginForm)
     mux.HandleFunc("POST /login", app.Login)
     mux.HandleFunc("POST /logout", app.Logout)
+	mux.HandleFunc("POST /theme", app.SetTheme)
 
     // logged-in pages
     mux.Handle("GET /dashboard", requireLogin(http.HandlerFunc(app.Dashboard)))

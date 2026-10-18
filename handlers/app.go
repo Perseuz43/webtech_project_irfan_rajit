@@ -6,6 +6,7 @@ import (
     "html/template"
     "log"
     "net/http"
+    "strings"
 
     "github.com/alexedwards/scs/v2"
 )
@@ -27,20 +28,24 @@ type PageData struct {
     User  *SessionUser
     Error string
     Data  any
+    Theme string
+    Path  string
 }
 
 // New parses every page together with the shared layout.
 func New(db *sql.DB, sm *scs.SessionManager) (*App, error) {
+    funcs := template.FuncMap{"hasPrefix": strings.HasPrefix}
+
     pages := []string{
         "home", "login", "dashboard", "admin",
         "classes", "class_detail",
         "students", "student_form",
         "teachers", "teacher_form",
-		"attendance", "my_attendance", "attendance_report",
+        "attendance", "my_attendance", "attendance_report",
     }
     tmpls := make(map[string]*template.Template)
     for _, p := range pages {
-        t, err := template.ParseFiles("templates/layout.html", "templates/"+p+".html")
+        t, err := template.New("layout.html").Funcs(funcs).ParseFiles("templates/layout.html", "templates/"+p+".html")
         if err != nil {
             return nil, err
         }
@@ -68,6 +73,8 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, page string, status
         return
     }
     data.User = a.currentUser(r)
+    data.Theme = a.themeFor(r)
+    data.Path = r.URL.Path
 
     var buf bytes.Buffer
     if err := tmpl.ExecuteTemplate(&buf, "base", data); err != nil {

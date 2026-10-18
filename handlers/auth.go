@@ -59,6 +59,7 @@ func (a *App) Login(w http.ResponseWriter, r *http.Request) {
     a.Sessions.Put(r.Context(), "user_id", user.ID)
     a.Sessions.Put(r.Context(), "username", user.Username)
     a.Sessions.Put(r.Context(), "role", user.Role)
+	a.Sessions.Put(r.Context(), "theme", a.loadTheme(r, user.ID))
 
     http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
