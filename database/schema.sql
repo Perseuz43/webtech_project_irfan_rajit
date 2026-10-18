@@ -2,7 +2,7 @@
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     username      TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
-    role          TEXT NOT NULL CHECK (role IN ('admin', 'teacher', 'student')),
+    role          TEXT NOT NULL CHECK (role IN ('admin', 'teacher', 'student', 'parent')),
     created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -60,3 +60,17 @@ CREATE TABLE IF NOT EXISTS attendance (
 );
 
 CREATE INDEX IF NOT EXISTS idx_attendance_date ON attendance(date);
+
+
+CREATE TABLE IF NOT EXISTS parents (
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+    name    TEXT NOT NULL,
+    phone   TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS parent_students (
+    parent_id  INTEGER NOT NULL REFERENCES parents(id) ON DELETE CASCADE,
+    student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    PRIMARY KEY (parent_id, student_id)
+);
