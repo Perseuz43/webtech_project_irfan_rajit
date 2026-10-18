@@ -1,15 +1,25 @@
 ﻿{{define "content"}}
-<h2>Dashboard</h2>
-<p>Welcome, {{.User.Username}}! You are logged in as <strong>{{.User.Role}}</strong>.</p>
+<div class="page-head">
+  <h2>Hello, {{.User.Username}}</h2>
+  <span class="pill">{{.User.Role}}</span>
+</div>
 
 {{if eq .User.Role "admin"}}
-  <p><a href="/admin">Go to the admin area</a></p>
+  <p class="muted">What would you like to do today?</p>
+  {{template "adminTiles"}}
 {{end}}
-{{if or (eq .User.Role "admin") (eq .User.Role "teacher")}}
-  <p><a href="/attendance">Take attendance</a> &nbsp;|&nbsp; <a href="/attendance/report">Attendance report</a></p>
+
+{{if eq .User.Role "teacher"}}
+  <div class="tiles">
+    <a class="tile" href="/attendance"><strong>Take attendance</strong><span>Mark a class for any date</span></a>
+    <a class="tile" href="/attendance/report"><strong>Attendance report</strong><span>Totals by class and date range</span></a>
+  </div>
 {{end}}
+
 {{if eq .User.Role "student"}}
-  <p><a href="/my-attendance">My attendance</a></p>
+  <div class="tiles">
+    <a class="tile" href="/my-attendance"><strong>My attendance</strong><span>Your records and percentage</span></a>
+  </div>
 {{end}}
 
 {{with .Data}}
@@ -44,7 +54,7 @@
     {{end}}
   </table>
   {{else}}
-  <p>No subjects have been assigned to you yet.</p>
+  <p class="muted">No subjects have been assigned to you yet.</p>
   {{end}}
   {{end}}
 {{end}}
