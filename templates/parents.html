@@ -1,0 +1,26 @@
+﻿{{define "content"}}
+<div class="page-head"><h2>Parents</h2></div>
+<p><a href="/admin/parents/new" class="button">Add parent</a></p>
+
+{{if .Data}}
+<table>
+  <tr><th>Name</th><th>Phone</th><th>Children</th><th>Username</th><th>Actions</th></tr>
+  {{range .Data}}
+  <tr>
+    <td>{{.Name}}</td>
+    <td>{{.Phone}}</td>
+    <td>{{.ChildCount}}</td>
+    <td>{{.Username}}</td>
+    <td class="actions">
+      <a href="/admin/parents/{{.ID}}/edit">Edit</a>
+      <form method="post" action="/admin/parents/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this parent and their login account?')">
+        <button type="submit" class="danger">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p class="muted">No parents yet.</p>
+{{end}}
+{{end}}

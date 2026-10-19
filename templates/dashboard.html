@@ -57,5 +57,27 @@
   <p class="muted">No subjects have been assigned to you yet.</p>
   {{end}}
   {{end}}
+
+  {{with .Parent}}
+  <h3>My children</h3>
+  {{if $d.Children}}
+  <div class="tiles">
+    {{range $d.Children}}
+    <a class="tile" href="/children/{{.ID}}/attendance">
+      <strong>{{.Name}}</strong>
+      <span>{{if .ClassName}}{{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}} | Roll {{.Roll}}</span>
+    </a>
+    {{end}}
+  </div>
+  {{else}}
+  <p class="muted">No children are linked to your account yet. Please ask the school administrator.</p>
+  {{end}}
+
+  <h3>My profile</h3>
+  <table class="profile">
+    <tr><th>Name</th><td>{{.Name}}</td></tr>
+    <tr><th>Phone</th><td>{{.Phone}}</td></tr>
+  </table>
+  {{end}}
 {{end}}
 {{end}}

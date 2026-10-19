@@ -1,0 +1,29 @@
+﻿{{define "content"}}
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+{{with .Data}}
+<h2>{{.Student.Name}}</h2>
+<p class="muted">{{if .Student.ClassName}}{{.Student.ClassName}}{{end}}{{if .Student.SectionName}} {{.Student.SectionName}}{{end}} | Roll {{.Student.Roll}}</p>
+
+<h3>Attendance</h3>
+{{if .Summary.Total}}
+<table class="profile">
+  <tr><th>Days recorded</th><td>{{.Summary.Total}}</td></tr>
+  <tr><th>Present</th><td>{{.Summary.Present}}</td></tr>
+  <tr><th>Late</th><td>{{.Summary.Late}}</td></tr>
+  <tr><th>Absent</th><td>{{.Summary.Absent}}</td></tr>
+  <tr><th>Attendance</th><td>{{printf "%.1f" .Summary.Percent}}% (late counts as attended)</td></tr>
+</table>
+
+<h3>Recent records</h3>
+{{if gt .Summary.Total (len .Records)}}<p class="muted">Showing the latest {{len .Records}} records.</p>{{end}}
+<table>
+  <tr><th>Date</th><th>Status</th></tr>
+  {{range .Records}}
+  <tr><td>{{.Date}}</td><td class="st-{{.Status}}">{{.Status}}</td></tr>
+  {{end}}
+</table>
+{{else}}
+<p class="muted">No attendance has been recorded yet.</p>
+{{end}}
+{{end}}
+{{end}}

@@ -10,6 +10,7 @@
   <a class="tile" href="/admin/classes"><strong>Classes and subjects</strong><span>Classes, sections and subjects</span></a>
   <a class="tile" href="/admin/students"><strong>Students</strong><span>Add, edit and remove students</span></a>
   <a class="tile" href="/admin/teachers"><strong>Teachers</strong><span>Accounts and assigned subjects</span></a>
+  <a class="tile" href="/admin/parents"><strong>Parents</strong><span>Accounts and linked children</span></a>
   <a class="tile" href="/attendance"><strong>Take attendance</strong><span>Mark a class for any date</span></a>
   <a class="tile" href="/attendance/report"><strong>Attendance report</strong><span>Totals by class and date range</span></a>
 </div>
@@ -34,6 +35,7 @@
         <a href="/admin/classes" class="{{if hasPrefix .Path "/admin/classes"}}active{{end}}">Classes</a>
         <a href="/admin/students" class="{{if hasPrefix .Path "/admin/students"}}active{{end}}">Students</a>
         <a href="/admin/teachers" class="{{if hasPrefix .Path "/admin/teachers"}}active{{end}}">Teachers</a>
+        <a href="/admin/parents" class="{{if hasPrefix .Path "/admin/parents"}}active{{end}}">Parents</a>
       {{end}}
       {{if or (eq .User.Role "admin") (eq .User.Role "teacher")}}
         <a href="/attendance" class="{{if eq .Path "/attendance"}}active{{end}}">Attendance</a>

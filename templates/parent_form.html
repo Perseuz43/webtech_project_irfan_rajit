@@ -1,0 +1,43 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{if $d.Editing}}Edit parent{{else}}Add parent{{end}}</h2>
+<p><a href="/admin/parents">&larr; All parents</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+<form method="post" action="{{$d.Action}}" class="card wide">
+  <label for="name">Full name</label>
+  <input type="text" id="name" name="name" value="{{$d.Form.Name}}" required maxlength="100">
+
+  <label for="phone">Phone</label>
+  <input type="text" id="phone" name="phone" value="{{$d.Form.Phone}}" maxlength="20">
+
+  {{if $d.Editing}}
+    <p>Login username: <strong>{{$d.Username}}</strong></p>
+  {{else}}
+    <label for="username">Login username</label>
+    <input type="text" id="username" name="username" value="{{$d.Form.Username}}" required maxlength="30" autocomplete="off">
+
+    <label for="password">Starting password</label>
+    <input type="password" id="password" name="password" required minlength="6" maxlength="72" autocomplete="new-password">
+  {{end}}
+
+  <button type="submit">{{if $d.Editing}}Save changes{{else}}Add parent{{end}}</button>
+</form>
+
+{{if $d.Editing}}
+<h3>Children</h3>
+{{if $d.Children}}
+<form method="post" action="/admin/parents/{{$d.ID}}/children" class="card wide">
+  {{range $d.Children}}
+  <label class="check">
+    <input type="checkbox" name="student_ids" value="{{.ID}}" {{if .Linked}}checked{{end}}>
+    {{.Name}} (roll {{.Roll}}{{if .ClassName}}, {{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}})
+  </label>
+  {{end}}
+  <button type="submit">Save children</button>
+</form>
+{{else}}
+<p class="muted">There are no students yet. Add students first, then link them here.</p>
+{{end}}
+{{end}}
+{{end}}
