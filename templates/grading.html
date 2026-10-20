@@ -1,0 +1,43 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<div class="page-head"><h2>Grading system</h2></div>
+<p class="muted">Choose how marks are turned into grades and GPA. Results are worked out from the saved marks, so switching the system updates every report card, including past exams.</p>
+<p><a href="/admin/grading/new" class="button">Create your own system</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+{{range $d.Scales}}
+{{$s := .}}
+<div class="card scale">
+  <div class="scale-head">
+    <strong>{{.Name}}</strong>
+    {{if eq .ID $d.ActiveID}}<span class="pill">In use</span>{{end}}
+    {{if .IsPreset}}<span class="pill">Built in</span>{{end}}
+    {{if ne .ID $d.ActiveID}}
+    <form method="post" action="/admin/grading/active" class="inline">
+      <input type="hidden" name="scale_id" value="{{.ID}}">
+      <button type="submit">Use this system</button>
+    </form>
+    {{end}}
+  </div>
+  <p class="muted">Pass mark: {{printf "%g" .PassPercent}}% | {{if .UseGPA}}GPA is calculated{{else}}No GPA{{end}}</p>
+  {{if .Bands}}
+  <table>
+    <tr><th>From %</th><th>Grade</th>{{if $s.UseGPA}}<th>Grade point</th>{{end}}</tr>
+    {{range .Bands}}
+    <tr><td>{{printf "%g" .MinPercent}}</td><td>{{.Grade}}</td>{{if $s.UseGPA}}<td>{{printf "%.2f" .Point}}</td>{{end}}</tr>
+    {{end}}
+  </table>
+  {{else}}
+  <p class="muted">No grades. Reports show marks and percentage only.</p>
+  {{end}}
+  {{if not .IsPreset}}
+  <div class="scale-foot">
+    <a href="/admin/grading/{{.ID}}/edit">Edit</a>
+    <form method="post" action="/admin/grading/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this grading system?')">
+      <button type="submit" class="danger">Delete</button>
+    </form>
+  </div>
+  {{end}}
+</div>
+{{end}}
+{{end}}

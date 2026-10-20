@@ -1,0 +1,20 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{$d.Heading}}</h2>
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+
+{{if $d.Exams}}
+<table>
+  <tr><th>Exam</th><th>Date</th><th></th></tr>
+  {{range $d.Exams}}
+  <tr>
+    <td>{{.Name}}</td>
+    <td>{{.Date}}</td>
+    <td><a href="{{$d.Base}}/{{.ID}}">View report card</a></td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p class="muted">No results have been published yet.</p>
+{{end}}
+{{end}}

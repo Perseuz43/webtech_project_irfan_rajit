@@ -13,12 +13,14 @@
   <div class="tiles">
     <a class="tile" href="/attendance"><strong>Take attendance</strong><span>Mark a class for any date</span></a>
     <a class="tile" href="/attendance/report"><strong>Attendance report</strong><span>Totals by class and date range</span></a>
+    <a class="tile" href="/marks"><strong>Enter marks</strong><span>Marks for your subjects</span></a>
   </div>
 {{end}}
 
 {{if eq .User.Role "student"}}
   <div class="tiles">
     <a class="tile" href="/my-attendance"><strong>My attendance</strong><span>Your records and percentage</span></a>
+    <a class="tile" href="/my-results"><strong>My results</strong><span>Published report cards</span></a>
   </div>
 {{end}}
 
@@ -63,10 +65,14 @@
   {{if $d.Children}}
   <div class="tiles">
     {{range $d.Children}}
-    <a class="tile" href="/children/{{.ID}}/attendance">
+    <div class="tile">
       <strong>{{.Name}}</strong>
       <span>{{if .ClassName}}{{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}} | Roll {{.Roll}}</span>
-    </a>
+      <div class="tile-links">
+        <a href="/children/{{.ID}}/attendance">Attendance</a>
+        <a href="/children/{{.ID}}/results">Results</a>
+      </div>
+    </div>
     {{end}}
   </div>
   {{else}}

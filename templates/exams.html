@@ -1,0 +1,37 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<div class="page-head"><h2>Exams</h2></div>
+<p><a href="/admin/grading">Grading system</a> &nbsp;|&nbsp; <a href="/marks">Enter marks</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+{{if $d.Classes}}
+<form method="post" action="/admin/exams" class="inline-form wrap">
+  <select name="class_id" required>
+    <option value="">Choose a class</option>
+    {{range $d.Classes}}<option value="{{.ID}}">{{.Name}}</option>{{end}}
+  </select>
+  <input type="text" name="name" placeholder="e.g. Midterm" required maxlength="50">
+  <input type="date" name="exam_date" value="{{$d.Today}}" required>
+  <button type="submit">Create exam</button>
+</form>
+{{else}}
+<p class="error">There are no classes yet. <a href="/admin/classes">Create a class first</a>.</p>
+{{end}}
+
+{{if $d.Exams}}
+<table>
+  <tr><th>Exam</th><th>Class</th><th>Date</th><th>Results</th><th></th></tr>
+  {{range $d.Exams}}
+  <tr>
+    <td>{{.Name}}</td>
+    <td>{{.ClassName}}</td>
+    <td>{{.Date}}</td>
+    <td>{{if .Published}}<span class="res-Passed">Published</span>{{else}}<span class="muted">Hidden</span>{{end}}</td>
+    <td><a href="/admin/exams/{{.ID}}">Manage</a></td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p class="muted">No exams yet.</p>
+{{end}}
+{{end}}

@@ -1,0 +1,58 @@
+﻿{{define "content"}}
+{{with .Data}}
+{{$c := .Card}}
+<div class="actions-bar no-print">
+  <a href="{{.Back}}">&larr; Back</a>
+  <button type="button" onclick="window.print()">Print report card</button>
+</div>
+
+<div class="report">
+  <h2 class="report-title">Report Card</h2>
+  <p class="report-sub">{{$c.Exam.Name}} | {{$c.Exam.ClassName}} | {{$c.Exam.Date}}</p>
+
+  <table class="profile">
+    <tr><th>Student</th><td>{{$c.Student.Name}}</td></tr>
+    <tr><th>Roll number</th><td>{{$c.Student.Roll}}</td></tr>
+    <tr><th>Class</th><td>{{$c.Student.ClassName}}{{if $c.Student.SectionName}} {{$c.Student.SectionName}}{{end}}</td></tr>
+  </table>
+
+  <table class="marks-table">
+    <tr>
+      <th>Subject</th><th>Full marks</th><th>Marks</th><th>Percent</th>
+      {{if $c.Scale.Bands}}<th>Grade</th>{{end}}
+      {{if $c.Scale.UseGPA}}<th>Grade point</th>{{end}}
+      <th>Result</th>
+    </tr>
+    {{range $c.Rows}}
+    <tr>
+      <td>{{.Subject}}</td>
+      <td>{{printf "%g" .Full}}</td>
+      {{if .HasMarks}}
+        <td>{{printf "%g" .Marks}}</td>
+        <td>{{printf "%.1f" .Percent}}%</td>
+        {{if $c.Scale.Bands}}<td>{{.Grade}}</td>{{end}}
+        {{if $c.Scale.UseGPA}}<td>{{printf "%.2f" .Point}}</td>{{end}}
+        <td class="{{if .Passed}}res-Passed{{else}}res-Failed{{end}}">{{if .Passed}}Pass{{else}}Fail{{end}}</td>
+      {{else}}
+        <td>-</td>
+        <td>-</td>
+        {{if $c.Scale.Bands}}<td>-</td>{{end}}
+        {{if $c.Scale.UseGPA}}<td>-</td>{{end}}
+        <td class="res-Incomplete">Not entered</td>
+      {{end}}
+    </tr>
+    {{end}}
+  </table>
+
+  <table class="profile">
+    <tr><th>Total marks</th><td>{{printf "%g" $c.TotalMarks}} / {{printf "%g" $c.TotalFull}}</td></tr>
+    <tr><th>Percentage</th><td>{{printf "%.1f" $c.Percent}}%</td></tr>
+    {{if $c.Scale.Bands}}<tr><th>Overall grade</th><td>{{$c.Grade}}</td></tr>{{end}}
+    {{if $c.Scale.UseGPA}}<tr><th>GPA</th><td>{{if $c.HasGPA}}{{printf "%.2f" $c.GPA}}{{else}}-{{end}}</td></tr>{{end}}
+    <tr><th>Result</th><td class="res-{{$c.Status}}">{{$c.Status}}</td></tr>
+  </table>
+
+  <p class="muted small">Grading system: {{$c.Scale.Name}}. Pass mark: {{printf "%g" $c.Scale.PassPercent}}%.</p>
+</div>
+{{end}}
+{{end}}

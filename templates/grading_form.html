@@ -1,0 +1,22 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{if $d.Editing}}Edit grading system{{else}}Create grading system{{end}}</h2>
+<p><a href="/admin/grading">&larr; All grading systems</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+<form method="post" action="{{$d.Action}}" class="card wide">
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" value="{{$d.Form.Name}}" required maxlength="60" placeholder="e.g. Our school scale">
+
+  <label for="pass_percent">Pass mark (percent)</label>
+  <input type="number" id="pass_percent" name="pass_percent" value="{{$d.Form.PassPercent}}" required min="0" max="100" step="any">
+
+  <label class="check"><input type="checkbox" name="use_gpa" value="1" {{if $d.Form.UseGPA}}checked{{end}}> Calculate GPA (each grade needs a grade point)</label>
+
+  <label for="bands">Grades, one per line</label>
+  <textarea id="bands" name="bands" rows="9" class="mono" spellcheck="false">{{$d.Form.Bands}}</textarea>
+  <p class="muted small">Write each line as: minimum percent, grade, grade point. For example <code>80 A+ 5.00</code> means 80% and above is A+ worth 5.00 points. Leave the grade point out if GPA is switched off. One line must start at 0. Leave the box empty to show marks and percentage only.</p>
+
+  <button type="submit">{{if $d.Editing}}Save changes{{else}}Create grading system{{end}}</button>
+</form>
+{{end}}

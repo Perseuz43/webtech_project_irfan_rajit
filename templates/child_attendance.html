@@ -3,6 +3,7 @@
 {{with .Data}}
 <h2>{{.Student.Name}}</h2>
 <p class="muted">{{if .Student.ClassName}}{{.Student.ClassName}}{{end}}{{if .Student.SectionName}} {{.Student.SectionName}}{{end}} | Roll {{.Student.Roll}}</p>
+<p><strong>Attendance</strong> &nbsp;|&nbsp; <a href="/children/{{.Student.ID}}/results">Results</a></p>
 
 <h3>Attendance</h3>
 {{if .Summary.Total}}

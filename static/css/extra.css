@@ -1,0 +1,84 @@
+﻿/* extra styles for exams, grading, report cards and printing */
+
+textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+textarea:focus { outline: none; border-color: var(--link); box-shadow: 0 0 0 3px rgba(79, 143, 247, 0.25); }
+textarea.mono { font-family: Consolas, "Courier New", monospace; }
+
+code { background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; padding: 0 0.3rem; }
+
+td input[type="number"] { width: 120px; }
+
+/* cards that are not links (parent children) */
+div.tile {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.2rem;
+}
+div.tile strong { display: block; margin-bottom: 0.2rem; color: var(--link); }
+div.tile span { display: block; color: var(--muted); font-size: 0.9rem; }
+.tile-links { display: flex; gap: 1rem; margin-top: 0.7rem; font-size: 0.92rem; }
+
+/* grading system cards */
+.card.scale { max-width: 640px; margin-bottom: 1rem; }
+.scale-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.scale-head form.inline { margin-left: auto; }
+.scale-foot { display: flex; align-items: center; gap: 1rem; }
+.card table { box-shadow: none; margin: 0.75rem 0; }
+
+/* results */
+.res-Passed { color: var(--success); font-weight: 600; }
+.res-Failed { color: var(--danger); font-weight: 600; }
+.res-Incomplete { color: var(--warn); font-weight: 600; }
+
+/* report card */
+.actions-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.actions-bar button { margin-top: 0; }
+
+.report {
+  max-width: 760px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 2rem;
+}
+.report-title { text-align: center; margin: 0; }
+.report-sub { text-align: center; color: var(--muted); margin: 0.25rem 0 1rem; }
+.report table { width: 100%; box-shadow: none; }
+
+/* printing: hide the site chrome and always print in light colors */
+@media print {
+  :root,
+  :root[data-theme="light"],
+  :root[data-theme="dark"],
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f2f2f2;
+    --text: #000000;
+    --muted: #444444;
+    --border: #999999;
+    --link: #000000;
+    --success: #15803d;
+    --danger: #b91c1c;
+    --warn: #92400e;
+    --shadow: none;
+  }
+  .topbar, .theme-float, .no-print, script { display: none !important; }
+  body { background: #ffffff; }
+  main.content { max-width: none; padding: 0; overflow: visible; }
+  .report { border: none; box-shadow: none; padding: 0; }
+  tr:hover td { background: transparent; }
+}

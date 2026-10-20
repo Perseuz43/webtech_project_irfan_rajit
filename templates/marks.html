@@ -1,0 +1,61 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>Enter marks</h2>
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+{{if $d.Saved}}<p class="success">Marks saved.</p>{{end}}
+
+{{if $d.Exams}}
+<form method="get" action="/marks" class="inline-form wrap">
+  <select name="exam_id" required>
+    <option value="">Choose an exam</option>
+    {{range $d.Exams}}
+    <option value="{{.ID}}" {{if eq .ID $d.ExamID}}selected{{end}}>{{.ClassName}} - {{.Name}} ({{.Date}})</option>
+    {{end}}
+  </select>
+  <button type="submit">Choose exam</button>
+</form>
+{{else}}
+<p class="error">No exams are available to you yet. Teachers only see exams of classes where the admin has assigned them a subject.</p>
+{{end}}
+
+{{if $d.Exam}}
+  {{if $d.Subjects}}
+  <form method="get" action="/marks" class="inline-form wrap">
+    <input type="hidden" name="exam_id" value="{{$d.ExamID}}">
+    <select name="subject_id" required>
+      <option value="">Choose a subject</option>
+      {{range $d.Subjects}}
+      <option value="{{.SubjectID}}" {{if eq .SubjectID $d.SubjectID}}selected{{end}}>{{.Name}} (out of {{printf "%g" .FullMarks}})</option>
+      {{end}}
+    </select>
+    <button type="submit">Load students</button>
+  </form>
+  {{else}}
+  <p class="error">You have no subjects in this exam's class.</p>
+  {{end}}
+{{end}}
+
+{{if $d.Loaded}}
+  {{if $d.Rows}}
+  <form method="post" action="/marks">
+    <input type="hidden" name="exam_id" value="{{$d.ExamID}}">
+    <input type="hidden" name="subject_id" value="{{$d.SubjectID}}">
+    <p><strong>{{$d.Subject.Name}}</strong>, out of {{printf "%g" $d.Subject.FullMarks}}. Leave a box empty if there is no mark yet.</p>
+    <table>
+      <tr><th>Roll</th><th>Name</th><th>Marks</th></tr>
+      {{range $d.Rows}}
+      <tr>
+        <td>{{.Roll}}</td>
+        <td>{{.Name}}</td>
+        <td><input type="number" name="mark_{{.StudentID}}" value="{{.Value}}" min="0" max="{{printf "%g" $d.Subject.FullMarks}}" step="any"></td>
+      </tr>
+      {{end}}
+    </table>
+    <button type="submit">Save marks</button>
+  </form>
+  {{else}}
+  <p class="muted">There are no students in this class yet.</p>
+  {{end}}
+{{end}}
+{{end}}

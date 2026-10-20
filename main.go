@@ -26,10 +26,16 @@ func main() {
     if err := database.Migrate(db); err != nil {
         log.Fatal("database migration failed: ", err)
     }
+    if err := database.MigrateExams(db); err != nil {
+        log.Fatal("exam tables migration failed: ", err)
+    }
     log.Println("Database connected and migrated:", cfg.DBPath)
 
     if err := models.SeedAdmin(db, cfg.AdminPassword); err != nil {
         log.Fatal("creating default admin failed: ", err)
+    }
+    if err := models.SeedGrading(db); err != nil {
+        log.Fatal("creating grading systems failed: ", err)
     }
 
     sm := scs.New()
@@ -48,6 +54,8 @@ func main() {
 
     admin := func(h http.HandlerFunc) http.Handler { return requireAdmin(h) }
     staff := func(h http.HandlerFunc) http.Handler { return requireStaff(h) }
+    student := func(h http.HandlerFunc) http.Handler { return requireStudent(h) }
+    parent := func(h http.HandlerFunc) http.Handler { return requireParent(h) }
 
     mux := http.NewServeMux()
 
@@ -100,14 +108,41 @@ func main() {
     mux.Handle("POST /admin/parents/{id}/children", admin(app.ParentChildren))
     mux.Handle("POST /admin/parents/{id}/delete", admin(app.ParentDelete))
 
+    // grading systems and exams (admin)
+    mux.Handle("GET /admin/grading", admin(app.GradingList))
+    mux.Handle("POST /admin/grading/active", admin(app.GradingSetActive))
+    mux.Handle("GET /admin/grading/new", admin(app.GradingNewForm))
+    mux.Handle("POST /admin/grading", admin(app.GradingCreate))
+    mux.Handle("GET /admin/grading/{id}/edit", admin(app.GradingEditForm))
+    mux.Handle("POST /admin/grading/{id}", admin(app.GradingUpdate))
+    mux.Handle("POST /admin/grading/{id}/delete", admin(app.GradingDelete))
+
+    mux.Handle("GET /admin/exams", admin(app.ExamList))
+    mux.Handle("POST /admin/exams", admin(app.ExamCreate))
+    mux.Handle("GET /admin/exams/{id}", admin(app.ExamDetail))
+    mux.Handle("POST /admin/exams/{id}/subjects", admin(app.ExamSaveSubjects))
+    mux.Handle("POST /admin/exams/{id}/publish", admin(app.ExamPublish))
+    mux.Handle("POST /admin/exams/{id}/delete", admin(app.ExamDelete))
+    mux.Handle("GET /admin/exams/{id}/students/{sid}", admin(app.ExamStudentCard))
+
     // attendance: admins and teachers mark and report, students view their own
     mux.Handle("GET /attendance", staff(app.AttendancePage))
     mux.Handle("POST /attendance", staff(app.AttendanceSave))
     mux.Handle("GET /attendance/report", staff(app.AttendanceReport))
-    mux.Handle("GET /my-attendance", requireStudent(http.HandlerFunc(app.MyAttendance)))
+    mux.Handle("GET /my-attendance", student(app.MyAttendance))
 
-    // parents: view only their own linked children
-    mux.Handle("GET /children/{id}/attendance", requireParent(http.HandlerFunc(app.ChildAttendance)))
+    // marks entry: admins and teachers (teachers only for their own subjects)
+    mux.Handle("GET /marks", staff(app.MarksPage))
+    mux.Handle("POST /marks", staff(app.MarksSave))
+
+    // students: their own published results
+    mux.Handle("GET /my-results", student(app.MyResults))
+    mux.Handle("GET /my-results/{eid}", student(app.MyReportCard))
+
+    // parents: only their own linked children
+    mux.Handle("GET /children/{id}/attendance", parent(app.ChildAttendance))
+    mux.Handle("GET /children/{id}/results", parent(app.ChildResults))
+    mux.Handle("GET /children/{id}/results/{eid}", parent(app.ChildReportCard))
 
     // block cross-site form submissions (CSRF protection)
     cop := http.NewCrossOriginProtection()

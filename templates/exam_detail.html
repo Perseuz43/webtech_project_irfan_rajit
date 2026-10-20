@@ -1,0 +1,63 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{$d.Exam.Name}}</h2>
+<p class="muted">{{$d.Exam.ClassName}} | {{$d.Exam.Date}} | Grading system: {{$d.Scale.Name}}</p>
+<p><a href="/admin/exams">&larr; All exams</a> &nbsp;|&nbsp; <a href="/marks?exam_id={{$d.Exam.ID}}">Enter marks</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+<form method="post" action="/admin/exams/{{$d.Exam.ID}}/publish" class="inline-form wrap">
+  {{if $d.Exam.Published}}
+    <input type="hidden" name="publish" value="0">
+    <span class="pill">Results are published</span>
+    <button type="submit">Hide results again</button>
+  {{else}}
+    <input type="hidden" name="publish" value="1">
+    <span class="muted">Results are hidden from students and parents.</span>
+    <button type="submit">Publish results</button>
+  {{end}}
+</form>
+
+<h3>Subjects and full marks</h3>
+{{if $d.Subjects}}
+<form method="post" action="/admin/exams/{{$d.Exam.ID}}/subjects" class="card wide">
+  {{range $d.Subjects}}
+  <label for="full_{{.SubjectID}}">{{.Name}}</label>
+  <input type="number" id="full_{{.SubjectID}}" name="full_{{.SubjectID}}" value="{{printf "%g" .FullMarks}}" required min="1" max="1000" step="any">
+  {{end}}
+  <button type="submit">Save full marks</button>
+</form>
+{{else}}
+<p class="muted">This class has no subjects yet. <a href="/admin/classes">Add subjects</a> and reopen this page.</p>
+{{end}}
+
+<h3>Results</h3>
+{{if $d.Cards}}
+<table>
+  <tr>
+    <th>Roll</th><th>Name</th><th>Total</th><th>Percent</th>
+    {{if $d.Scale.Bands}}<th>Grade</th>{{end}}
+    {{if $d.Scale.UseGPA}}<th>GPA</th>{{end}}
+    <th>Result</th><th></th>
+  </tr>
+  {{range $d.Cards}}
+  <tr>
+    <td>{{.Student.Roll}}</td>
+    <td>{{.Student.Name}}</td>
+    <td>{{printf "%g" .TotalMarks}} / {{printf "%g" .TotalFull}}</td>
+    <td>{{printf "%.1f" .Percent}}%</td>
+    {{if $d.Scale.Bands}}<td>{{.Grade}}</td>{{end}}
+    {{if $d.Scale.UseGPA}}<td>{{if .HasGPA}}{{printf "%.2f" .GPA}}{{else}}-{{end}}</td>{{end}}
+    <td class="res-{{.Status}}">{{.Status}}</td>
+    <td><a href="/admin/exams/{{$d.Exam.ID}}/students/{{.Student.ID}}">Report card</a></td>
+  </tr>
+  {{end}}
+</table>
+<p class="muted small">Incomplete means at least one subject has no mark yet. Failed means at least one subject is below the pass mark.</p>
+{{else}}
+<p class="muted">There are no students in this class yet.</p>
+{{end}}
+
+<form method="post" action="/admin/exams/{{$d.Exam.ID}}/delete" class="inline-form" onsubmit="return confirm('Delete this exam and all its marks?')">
+  <button type="submit" class="danger">Delete exam</button>
+</form>
+{{end}}
