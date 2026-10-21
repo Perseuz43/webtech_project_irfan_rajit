@@ -29,6 +29,9 @@ func main() {
     if err := database.MigrateExams(db); err != nil {
         log.Fatal("exam tables migration failed: ", err)
     }
+    if err := database.MigrateNotices(db); err != nil {
+        log.Fatal("notices table migration failed: ", err)
+    }
     log.Println("Database connected and migrated:", cfg.DBPath)
 
     if err := models.SeedAdmin(db, cfg.AdminPassword); err != nil {
@@ -52,6 +55,7 @@ func main() {
     requireStudent := middleware.RequireRole(sm, "student")
     requireParent := middleware.RequireRole(sm, "parent")
 
+    login := func(h http.HandlerFunc) http.Handler { return requireLogin(h) }
     admin := func(h http.HandlerFunc) http.Handler { return requireAdmin(h) }
     staff := func(h http.HandlerFunc) http.Handler { return requireStaff(h) }
     student := func(h http.HandlerFunc) http.Handler { return requireStudent(h) }
@@ -69,8 +73,9 @@ func main() {
     mux.HandleFunc("POST /logout", app.Logout)
     mux.HandleFunc("POST /theme", app.SetTheme)
 
-    // logged-in pages
-    mux.Handle("GET /dashboard", requireLogin(http.HandlerFunc(app.Dashboard)))
+    // logged-in pages (every role)
+    mux.Handle("GET /dashboard", login(app.Dashboard))
+    mux.Handle("GET /notices", login(app.NoticeList))
 
     // admin pages
     mux.Handle("GET /admin", admin(app.AdminHome))
@@ -124,6 +129,13 @@ func main() {
     mux.Handle("POST /admin/exams/{id}/publish", admin(app.ExamPublish))
     mux.Handle("POST /admin/exams/{id}/delete", admin(app.ExamDelete))
     mux.Handle("GET /admin/exams/{id}/students/{sid}", admin(app.ExamStudentCard))
+
+    // notices (admin writes, everyone reads their own on /notices)
+    mux.Handle("GET /admin/notices/new", admin(app.NoticeNewForm))
+    mux.Handle("POST /admin/notices", admin(app.NoticeCreate))
+    mux.Handle("GET /admin/notices/{id}/edit", admin(app.NoticeEditForm))
+    mux.Handle("POST /admin/notices/{id}", admin(app.NoticeUpdate))
+    mux.Handle("POST /admin/notices/{id}/delete", admin(app.NoticeDelete))
 
     // attendance: admins and teachers mark and report, students view their own
     mux.Handle("GET /attendance", staff(app.AttendancePage))

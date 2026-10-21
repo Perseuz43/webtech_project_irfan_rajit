@@ -6,6 +6,7 @@ import (
     "html/template"
     "log"
     "net/http"
+    "path/filepath"
     "strings"
 
     "github.com/alexedwards/scs/v2"
@@ -32,28 +33,27 @@ type PageData struct {
     Path  string
 }
 
-// New parses every page together with the shared layout.
+// New parses every page in the templates folder together with the shared layout.
+// A page named templates/exams.html is rendered with a.render(..., "exams", ...).
 func New(db *sql.DB, sm *scs.SessionManager) (*App, error) {
     funcs := template.FuncMap{"hasPrefix": strings.HasPrefix}
 
-    pages := []string{
-        "home", "login", "dashboard", "admin",
-        "classes", "class_detail",
-        "students", "student_form",
-        "teachers", "teacher_form",
-        "attendance", "my_attendance", "attendance_report",
-        "parents", "parent_form", "child_attendance",
-        "grading", "grading_form",
-        "exams", "exam_detail",
-        "marks", "results_list", "report_card",
+    files, err := filepath.Glob("templates/*.html")
+    if err != nil {
+        return nil, err
     }
+
     tmpls := make(map[string]*template.Template)
-    for _, p := range pages {
-        t, err := template.New("layout.html").Funcs(funcs).ParseFiles("templates/layout.html", "templates/"+p+".html")
+    for _, f := range files {
+        base := filepath.Base(f)
+        if base == "layout.html" {
+            continue
+        }
+        t, err := template.New("layout.html").Funcs(funcs).ParseFiles("templates/layout.html", f)
         if err != nil {
             return nil, err
         }
-        tmpls[p] = t
+        tmpls[strings.TrimSuffix(base, ".html")] = t
     }
     return &App{DB: db, Sessions: sm, Templates: tmpls}, nil
 }

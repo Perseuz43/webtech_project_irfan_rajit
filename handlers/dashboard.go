@@ -13,6 +13,7 @@ type DashboardData struct {
     Subjects []models.SubjectOption
     Parent   *models.Parent
     Children []models.Student
+    Notices  []models.Notice
 }
 
 // Dashboard shows different content depending on the logged-in user's role.
@@ -63,5 +64,13 @@ func (a *App) Dashboard(w http.ResponseWriter, r *http.Request) {
             data.Children = children
         }
     }
+
+    notices, err := models.ListNoticesForUser(a.DB, u.Role, u.ID, 3)
+    if err != nil {
+        a.serverError(w, err)
+        return
+    }
+    data.Notices = notices
+
     a.render(w, r, "dashboard", http.StatusOK, PageData{Title: "Dashboard", Data: data})
 }
