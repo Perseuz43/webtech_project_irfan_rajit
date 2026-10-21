@@ -32,6 +32,9 @@ func main() {
     if err := database.MigrateNotices(db); err != nil {
         log.Fatal("notices table migration failed: ", err)
     }
+    if err := database.MigrateFees(db); err != nil {
+        log.Fatal("fee tables migration failed: ", err)
+    }
     log.Println("Database connected and migrated:", cfg.DBPath)
 
     if err := models.SeedAdmin(db, cfg.AdminPassword); err != nil {
@@ -130,6 +133,18 @@ func main() {
     mux.Handle("POST /admin/exams/{id}/delete", admin(app.ExamDelete))
     mux.Handle("GET /admin/exams/{id}/students/{sid}", admin(app.ExamStudentCard))
 
+    // fees (admin)
+    mux.Handle("GET /admin/fees", admin(app.FeeList))
+    mux.Handle("POST /admin/fees", admin(app.FeeCreate))
+    mux.Handle("GET /admin/fees/{id}", admin(app.FeeDetail))
+    mux.Handle("POST /admin/fees/{id}/sync", admin(app.FeeBillMissing))
+    mux.Handle("POST /admin/fees/{id}/delete", admin(app.FeeDelete))
+    mux.Handle("GET /admin/charges/{id}", admin(app.ChargeDetail))
+    mux.Handle("POST /admin/charges/{id}/payments", admin(app.PaymentCreate))
+    mux.Handle("POST /admin/charges/{id}/payments/{pid}/delete", admin(app.PaymentDelete))
+    mux.Handle("GET /admin/payments/{pid}/receipt", admin(app.ReceiptAdmin))
+    mux.Handle("GET /admin/dues", admin(app.DuesReport))
+
     // notices (admin writes, everyone reads their own on /notices)
     mux.Handle("GET /admin/notices/new", admin(app.NoticeNewForm))
     mux.Handle("POST /admin/notices", admin(app.NoticeCreate))
@@ -147,14 +162,18 @@ func main() {
     mux.Handle("GET /marks", staff(app.MarksPage))
     mux.Handle("POST /marks", staff(app.MarksSave))
 
-    // students: their own published results
+    // students: their own results and fees
     mux.Handle("GET /my-results", student(app.MyResults))
     mux.Handle("GET /my-results/{eid}", student(app.MyReportCard))
+    mux.Handle("GET /my-fees", student(app.MyFees))
+    mux.Handle("GET /my-fees/receipts/{pid}", student(app.MyReceipt))
 
     // parents: only their own linked children
     mux.Handle("GET /children/{id}/attendance", parent(app.ChildAttendance))
     mux.Handle("GET /children/{id}/results", parent(app.ChildResults))
     mux.Handle("GET /children/{id}/results/{eid}", parent(app.ChildReportCard))
+    mux.Handle("GET /children/{id}/fees", parent(app.ChildFees))
+    mux.Handle("GET /children/{id}/fees/receipts/{pid}", parent(app.ChildReceipt))
 
     // block cross-site form submissions (CSRF protection)
     cop := http.NewCrossOriginProtection()
