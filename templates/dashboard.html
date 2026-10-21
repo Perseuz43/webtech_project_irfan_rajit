@@ -27,6 +27,16 @@
 {{with .Data}}
   {{$d := .}}
 
+  <div class="dash-section-head">
+    <h3>Latest notices</h3>
+    <a href="/notices">View all</a>
+  </div>
+  {{range .Notices}}
+    {{template "noticeBox" .}}
+  {{else}}
+    <p class="muted">There are no notices for you right now.</p>
+  {{end}}
+
   {{with .Student}}
   <h3>My profile</h3>
   <table class="profile">

@@ -1,0 +1,18 @@
+﻿/* notices */
+.notice {
+  max-width: 760px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--link);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.2rem;
+  margin: 0.9rem 0 0.4rem;
+}
+.notice.pinned { border-left-color: var(--warn); }
+.notice-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.notice-date { margin-left: auto; }
+.notice-body { margin-top: 0.5rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.notice-actions { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; font-size: 0.92rem; }
+.notice-actions form.inline { margin: 0; }
+.dash-section-head { display: flex; align-items: baseline; justify-content: space-between; max-width: 760px; }

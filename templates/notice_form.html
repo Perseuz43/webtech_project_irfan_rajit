@@ -1,0 +1,29 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{if $d.Editing}}Edit notice{{else}}Post a notice{{end}}</h2>
+<p><a href="/notices">&larr; All notices</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+<form method="post" action="{{$d.Action}}" class="card wide">
+  <label for="title">Title</label>
+  <input type="text" id="title" name="title" value="{{$d.Form.Title}}" required maxlength="120">
+
+  <label for="audience">Who should see it?</label>
+  <select id="audience" name="audience" required>
+    <option value="all" {{if eq $d.Form.Audience "all"}}selected{{end}}>Everyone</option>
+    <option value="teacher" {{if eq $d.Form.Audience "teacher"}}selected{{end}}>Teachers</option>
+    <option value="student" {{if eq $d.Form.Audience "student"}}selected{{end}}>Students</option>
+    <option value="parent" {{if eq $d.Form.Audience "parent"}}selected{{end}}>Parents</option>
+    {{range $d.Classes}}
+    <option value="class:{{.ID}}" {{if eq $d.Form.Audience (printf "class:%d" .ID)}}selected{{end}}>{{.Name}} (its students, their parents and its teachers)</option>
+    {{end}}
+  </select>
+
+  <label for="body">Message</label>
+  <textarea id="body" name="body" rows="8" required maxlength="2000">{{$d.Form.Body}}</textarea>
+
+  <label class="check"><input type="checkbox" name="pinned" value="1" {{if $d.Form.Pinned}}checked{{end}}> Mark as important (shown first)</label>
+
+  <button type="submit">{{if $d.Editing}}Save changes{{else}}Post notice{{end}}</button>
+</form>
+{{end}}

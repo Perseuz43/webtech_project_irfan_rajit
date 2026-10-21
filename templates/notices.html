@@ -1,0 +1,21 @@
+﻿{{define "content"}}
+<div class="page-head"><h2>Notices</h2></div>
+{{if eq .User.Role "admin"}}<p><a href="/admin/notices/new" class="button">Post a notice</a></p>{{end}}
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+{{if .Data}}
+  {{range .Data}}
+    {{template "noticeBox" .}}
+    {{if eq $.User.Role "admin"}}
+    <div class="notice-actions">
+      <a href="/admin/notices/{{.ID}}/edit">Edit</a>
+      <form method="post" action="/admin/notices/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this notice?')">
+        <button type="submit" class="danger">Delete</button>
+      </form>
+    </div>
+    {{end}}
+  {{end}}
+{{else}}
+  <p class="muted">There are no notices for you right now.</p>
+{{end}}
+{{end}}
