@@ -1,0 +1,66 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+{{$c := $d.Charge}}
+<h2>{{$c.FeeName}}</h2>
+<p class="muted">{{$c.StudentName}} | Roll {{$c.Roll}}{{if $c.ClassName}} | {{$c.ClassName}}{{end}}</p>
+<p><a href="/admin/fees/{{$c.FeeID}}">&larr; Back to this fee</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+<table class="profile">
+  <tr><th>Amount</th><td>{{$c.Amount}}</td></tr>
+  <tr><th>Paid</th><td>{{$c.Paid}}</td></tr>
+  <tr><th>Still due</th><td>{{$c.Due}}</td></tr>
+  <tr><th>Due date</th><td>{{$c.DueDate}}{{if $c.Overdue}}<span class="overdue-tag">Overdue</span>{{end}}</td></tr>
+  <tr><th>Status</th><td class="fee-{{$c.Status}}">{{$c.Status}}</td></tr>
+</table>
+
+{{if $c.Due}}
+<h3>Record a payment</h3>
+<form method="post" action="/admin/charges/{{$c.ID}}/payments" class="card wide">
+  <label for="amount">Amount (Tk)</label>
+  <input type="number" id="amount" name="amount" value="{{if $d.Form.Amount}}{{$d.Form.Amount}}{{else}}{{printf "%d" $c.Due}}{{end}}" required min="1" max="{{printf "%d" $c.Due}}" step="1">
+
+  <label for="paid_date">Payment date</label>
+  <input type="date" id="paid_date" name="paid_date" value="{{$d.Form.Date}}" max="{{$d.Today}}" required>
+
+  <label for="method">Method</label>
+  <select id="method" name="method" required>
+    <option value="cash" {{if eq $d.Form.Method "cash"}}selected{{end}}>Cash</option>
+    <option value="bank" {{if eq $d.Form.Method "bank"}}selected{{end}}>Bank</option>
+    <option value="mobile" {{if eq $d.Form.Method "mobile"}}selected{{end}}>Mobile banking</option>
+    <option value="other" {{if eq $d.Form.Method "other"}}selected{{end}}>Other</option>
+  </select>
+
+  <label for="note">Note (optional)</label>
+  <input type="text" id="note" name="note" value="{{$d.Form.Note}}" maxlength="100" placeholder="e.g. transaction ID">
+
+  <button type="submit">Save payment</button>
+</form>
+{{else}}
+<p class="success">This bill is fully paid.</p>
+{{end}}
+
+<h3>Payments</h3>
+{{if $d.Payments}}
+<table>
+  <tr><th>Receipt</th><th>Date</th><th>Amount</th><th>Method</th><th>Note</th><th></th></tr>
+  {{range $d.Payments}}
+  <tr>
+    <td>{{.ReceiptNo}}</td>
+    <td>{{.Date}}</td>
+    <td>{{.Amount}}</td>
+    <td>{{.MethodLabel}}</td>
+    <td>{{.Note}}</td>
+    <td class="actions">
+      <a href="/admin/payments/{{.ID}}/receipt">Receipt</a>
+      <form method="post" action="/admin/charges/{{$c.ID}}/payments/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this payment? Its receipt will stop working.')">
+        <button type="submit" class="danger">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p class="muted">No payments recorded yet.</p>
+{{end}}
+{{end}}

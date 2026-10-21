@@ -1,0 +1,18 @@
+﻿/* fees */
+.fee-Paid { color: var(--success); font-weight: 600; }
+.fee-Partial { color: var(--warn); font-weight: 600; }
+.fee-Unpaid { color: var(--danger); font-weight: 600; }
+.overdue-tag { color: var(--danger); font-size: 0.8rem; font-weight: 700; margin-left: 0.5rem; }
+
+.fee-item {
+  max-width: 760px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+}
+.fee-item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.fee-item table { box-shadow: none; margin: 0.75rem 0 0; }
+.fee-item p { margin: 0.4rem 0; }

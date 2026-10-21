@@ -1,0 +1,46 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{$d.Fee.Name}}</h2>
+<p><a href="/admin/fees">&larr; All fees</a> &nbsp;|&nbsp; <a href="/admin/dues">Dues report</a></p>
+{{if $d.Added}}<p class="success">{{$d.Added}}</p>{{end}}
+
+<table class="profile">
+  <tr><th>For</th><td>{{$d.Fee.ClassName}}</td></tr>
+  <tr><th>Amount each</th><td>{{$d.Fee.Amount}}</td></tr>
+  <tr><th>Due date</th><td>{{$d.Fee.DueDate}}</td></tr>
+  <tr><th>Students billed</th><td>{{$d.Fee.Students}}</td></tr>
+  <tr><th>Total expected</th><td>{{$d.Fee.Expected}}</td></tr>
+  <tr><th>Collected</th><td>{{$d.Fee.Collected}}</td></tr>
+  <tr><th>Outstanding</th><td>{{$d.Fee.Outstanding}}</td></tr>
+</table>
+
+<div class="inline-form wrap">
+  <form method="post" action="/admin/fees/{{$d.Fee.ID}}/sync" class="inline">
+    <button type="submit">Bill students who joined later</button>
+  </form>
+  <form method="post" action="/admin/fees/{{$d.Fee.ID}}/delete" class="inline" onsubmit="return confirm('Delete this fee, every student bill for it and all payments recorded against it?')">
+    <button type="submit" class="danger">Delete fee</button>
+  </form>
+</div>
+
+<h3>Students</h3>
+{{if $d.Charges}}
+<table>
+  <tr><th>Roll</th><th>Student</th><th>Class</th><th>Amount</th><th>Paid</th><th>Due</th><th>Status</th><th></th></tr>
+  {{range $d.Charges}}
+  <tr>
+    <td>{{.Roll}}</td>
+    <td>{{.StudentName}}</td>
+    <td>{{.ClassName}}</td>
+    <td>{{.Amount}}</td>
+    <td>{{.Paid}}</td>
+    <td>{{.Due}}</td>
+    <td class="fee-{{.Status}}">{{.Status}}{{if .Overdue}}<span class="overdue-tag">Overdue</span>{{end}}</td>
+    <td><a href="/admin/charges/{{.ID}}">Payments</a></td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p class="muted">No students are billed for this fee yet.</p>
+{{end}}
+{{end}}

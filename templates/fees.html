@@ -1,0 +1,38 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<div class="page-head"><h2>Fees</h2></div>
+<p><a href="/admin/dues">Dues report</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+
+<form method="post" action="/admin/fees" class="inline-form wrap">
+  <input type="text" name="name" placeholder="e.g. Tuition (November)" required maxlength="50">
+  <input type="number" name="amount" placeholder="Amount (Tk)" required min="1" max="10000000" step="1">
+  <input type="date" name="due_date" value="{{$d.Today}}" required>
+  <select name="class_id" required>
+    <option value="all">All students</option>
+    {{range $d.Classes}}<option value="{{.ID}}">{{.Name}}</option>{{end}}
+  </select>
+  <button type="submit">Create fee</button>
+</form>
+<p class="muted small">Creating a fee bills every student in the chosen class (or all students) straight away. Amounts are whole numbers in Tk.</p>
+
+{{if $d.Fees}}
+<table>
+  <tr><th>Fee</th><th>For</th><th>Amount each</th><th>Due date</th><th>Students</th><th>Collected</th><th>Outstanding</th><th></th></tr>
+  {{range $d.Fees}}
+  <tr>
+    <td>{{.Name}}</td>
+    <td>{{.ClassName}}</td>
+    <td>{{.Amount}}</td>
+    <td>{{.DueDate}}</td>
+    <td>{{.Students}}</td>
+    <td>{{.Collected}}</td>
+    <td>{{.Outstanding}}</td>
+    <td><a href="/admin/fees/{{.ID}}">Manage</a></td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p class="muted">No fees yet.</p>
+{{end}}
+{{end}}

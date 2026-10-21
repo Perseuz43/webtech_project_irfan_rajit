@@ -1,0 +1,34 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<div class="page-head"><h2>Dues report</h2></div>
+<p><a href="/admin/fees">&larr; Fees</a></p>
+
+<form method="get" action="/admin/dues" class="inline-form wrap">
+  <select name="class_id">
+    <option value="">All classes</option>
+    {{range $d.Classes}}<option value="{{.ID}}" {{if eq .ID $d.ClassID}}selected{{end}}>{{.Name}}</option>{{end}}
+  </select>
+  <button type="submit">Show</button>
+</form>
+
+{{if $d.Rows}}
+<p>Total outstanding: <strong>{{$d.TotalDue}}</strong></p>
+<table>
+  <tr><th>Student</th><th>Class</th><th>Fee</th><th>Due date</th><th>Amount</th><th>Paid</th><th>Balance</th><th></th></tr>
+  {{range $d.Rows}}
+  <tr>
+    <td>{{.StudentName}} (roll {{.Roll}})</td>
+    <td>{{.ClassName}}</td>
+    <td>{{.FeeName}}</td>
+    <td>{{.DueDate}}{{if .Overdue}}<span class="overdue-tag">Overdue</span>{{end}}</td>
+    <td>{{.Amount}}</td>
+    <td>{{.Paid}}</td>
+    <td>{{.Due}}</td>
+    <td><a href="/admin/charges/{{.ID}}">Record payment</a></td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<p class="muted">Nothing is due. Every bill is paid.</p>
+{{end}}
+{{end}}

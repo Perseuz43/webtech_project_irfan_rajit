@@ -1,0 +1,43 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>{{$d.Heading}}</h2>
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+
+<table class="profile">
+  <tr><th>Total billed</th><td>{{$d.Total}}</td></tr>
+  <tr><th>Paid</th><td>{{$d.Paid}}</td></tr>
+  <tr><th>Still due</th><td>{{$d.Due}}</td></tr>
+</table>
+
+{{if $d.Items}}
+  {{range $d.Items}}
+  {{$c := .Charge}}
+  <div class="fee-item">
+    <div class="fee-item-head">
+      <strong>{{$c.FeeName}}</strong>
+      <span class="fee-{{$c.Status}}">{{$c.Status}}</span>
+      {{if $c.Overdue}}<span class="overdue-tag">Overdue</span>{{end}}
+    </div>
+    <p class="muted">Due date: {{$c.DueDate}} | Amount: {{$c.Amount}} | Paid: {{$c.Paid}} | Balance: {{$c.Due}}</p>
+    {{if .Payments}}
+    <table>
+      <tr><th>Receipt</th><th>Date</th><th>Amount</th><th>Method</th><th></th></tr>
+      {{range .Payments}}
+      <tr>
+        <td>{{.ReceiptNo}}</td>
+        <td>{{.Date}}</td>
+        <td>{{.Amount}}</td>
+        <td>{{.MethodLabel}}</td>
+        <td><a href="{{$d.ReceiptBase}}/{{.ID}}">View receipt</a></td>
+      </tr>
+      {{end}}
+    </table>
+    {{else}}
+    <p class="muted small">No payments yet.</p>
+    {{end}}
+  </div>
+  {{end}}
+{{else}}
+<p class="muted">There are no fees billed yet.</p>
+{{end}}
+{{end}}
