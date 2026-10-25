@@ -1,0 +1,61 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<div class="page-head"><h2>Student directory</h2></div>
+<p class="muted">{{if eq .User.Role "admin"}}Every student in the school.{{else}}Students in the classes where you teach.{{end}} Parent details come from the parent accounts linked to each student.</p>
+{{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
+
+{{if $d.Classes}}
+<form method="get" action="/students" class="inline-form wrap no-print">
+  <select id="class_id" name="class_id">
+    <option value="">{{if eq .User.Role "admin"}}All classes{{else}}All my classes{{end}}</option>
+    {{range $d.Classes}}
+    <option value="{{.ID}}" {{if eq .ID $d.ClassID}}selected{{end}}>{{.Name}}</option>
+    {{end}}
+  </select>
+  <select id="section_id" name="section_id">
+    <option value="">All sections</option>
+    {{range $d.Sections}}
+    <option value="{{.ID}}" data-class="{{.ClassID}}" {{if eq .ID $d.SectionID}}selected{{end}}>{{.Name}}</option>
+    {{end}}
+  </select>
+  <input type="text" name="q" value="{{$d.Query}}" placeholder="Search name or roll" maxlength="50">
+  <button type="submit">Show</button>
+  <button type="button" onclick="window.print()">Print list</button>
+</form>
+
+{{if $d.Entries}}
+<p class="muted">{{len $d.Entries}} student(s)</p>
+<table>
+  <tr>
+    <th>Roll</th><th>Student</th><th>Class</th><th>Parents and contact</th>
+    {{if eq .User.Role "admin"}}<th class="no-print"></th>{{end}}
+  </tr>
+  {{range $d.Entries}}
+  <tr>
+    <td>{{.Roll}}</td>
+    <td>{{.Name}}</td>
+    <td>{{if .ClassName}}{{.ClassName}}{{else}}-{{end}}{{if .SectionName}} {{.SectionName}}{{end}}</td>
+    <td class="contact-cell">
+      {{range .Parents}}
+        <div>{{.Name}}{{if .Phone}} <span class="muted">{{.Phone}}</span>{{end}}</div>
+      {{else}}
+        {{if or .GuardianName .GuardianPhone}}
+          <div>{{.GuardianName}}{{if .GuardianPhone}} <span class="muted">{{.GuardianPhone}}</span>{{end}} <span class="muted small">(guardian on file)</span></div>
+        {{else}}
+          <span class="muted">-</span>
+        {{end}}
+      {{end}}
+    </td>
+    {{if eq $.User.Role "admin"}}<td class="no-print"><a href="/admin/students/{{.StudentID}}/edit">Edit</a></td>{{end}}
+  </tr>
+  {{end}}
+</table>
+{{else if not .Error}}
+<p class="muted">No students match.</p>
+{{end}}
+
+<script src="/static/js/student-form.js"></script>
+{{else}}
+<p class="error">No classes are available to you yet. Teachers only see students in classes where the admin has assigned them a subject.</p>
+{{end}}
+{{end}}

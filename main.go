@@ -158,6 +158,9 @@ func main() {
     mux.Handle("POST /admin/notices/{id}", admin(app.NoticeUpdate))
     mux.Handle("POST /admin/notices/{id}/delete", admin(app.NoticeDelete))
 
+    // student directory: admins see everyone, teachers only their own classes
+    mux.Handle("GET /students", staff(app.StudentDirectory))
+
     // attendance: admins and teachers mark and report, students view their own
     mux.Handle("GET /attendance", staff(app.AttendancePage))
     mux.Handle("POST /attendance", staff(app.AttendanceSave))
