@@ -1,0 +1,19 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<div class="page-head"><h2>Users and passwords</h2></div>
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+{{if $d.Message}}<p class="success">{{$d.Message}}</p>{{end}}
+
+<table>
+  <tr><th>Username</th><th>Role</th><th>Name</th><th></th></tr>
+  {{range $d.Users}}
+  <tr>
+    <td>{{.Username}}</td>
+    <td>{{.Role}}</td>
+    <td>{{if .Name}}{{.Name}}{{else}}-{{end}}</td>
+    <td><a href="/admin/users/{{.ID}}/password">Reset password</a></td>
+  </tr>
+  {{end}}
+</table>
+<p class="muted small">To change your own password, use the Password link in the top bar. It asks for your current password first.</p>
+{{end}}

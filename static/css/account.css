@@ -1,0 +1,3 @@
+﻿/* account links in the top bar */
+.topbar-link { color: #e8eef9; text-decoration: none; font-size: 0.9rem; opacity: 0.85; }
+.topbar-link:hover { opacity: 1; text-decoration: underline; }
