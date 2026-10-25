@@ -79,9 +79,15 @@ func main() {
     // logged-in pages (every role)
     mux.Handle("GET /dashboard", login(app.Dashboard))
     mux.Handle("GET /notices", login(app.NoticeList))
+    mux.Handle("GET /account/password", login(app.PasswordForm))
+    mux.Handle("POST /account/password", login(app.PasswordChange))
 
     // admin pages
     mux.Handle("GET /admin", admin(app.AdminHome))
+
+    mux.Handle("GET /admin/users", admin(app.UserList))
+    mux.Handle("GET /admin/users/{id}/password", admin(app.UserPasswordForm))
+    mux.Handle("POST /admin/users/{id}/password", admin(app.UserPasswordSet))
 
     mux.Handle("GET /admin/classes", admin(app.ClassList))
     mux.Handle("POST /admin/classes", admin(app.ClassCreate))
