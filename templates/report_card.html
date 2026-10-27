@@ -1,13 +1,13 @@
 ﻿{{define "content"}}
 {{with .Data}}
 {{$c := .Card}}
-<div class="actions-bar no-print">
+<div class="actions-bar doc-actions no-print">
   <a href="{{.Back}}">&larr; Back</a>
   <button type="button" onclick="window.print()">Print report card</button>
 </div>
 
-<div class="report">
-  <h2 class="report-title">Report Card</h2>
+<div class="doc report">
+  <h2 class="doc-title">Report Card</h2>
   <p class="report-sub">{{$c.Exam.Name}} | {{$c.Exam.ClassName}} | {{$c.Exam.Date}}</p>
 
   <table class="profile">
@@ -53,6 +53,12 @@
   </table>
 
   <p class="muted small">Grading system: {{$c.Scale.Name}}. Pass mark: {{printf "%g" $c.Scale.PassPercent}}%.</p>
+
+  <div class="doc-sign">
+    <div><span class="sign-line"></span>Class teacher</div>
+    <div><span class="sign-line"></span>Parent / guardian</div>
+    <div><span class="sign-line"></span>Principal</div>
+  </div>
 </div>
 {{end}}
 {{end}}
