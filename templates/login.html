@@ -1,8 +1,12 @@
 ﻿{{define "content"}}
 <div class="auth-card">
-  <span class="brand-mark big">S</span>
+  {{if .School.HasLogo}}
+    <img src="/logo?v={{.School.LogoVersion}}" alt="" class="brand-logo big">
+  {{else}}
+    <span class="brand-mark big">{{.School.Initial}}</span>
+  {{end}}
   <h2>Welcome back</h2>
-  <p class="muted">Sign in to your School Management account.</p>
+  <p class="muted">Sign in to {{.School.Name}}.</p>
   {{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
   <form method="post" action="/login">
     <label for="username">Username</label>

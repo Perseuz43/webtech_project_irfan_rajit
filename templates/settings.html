@@ -1,0 +1,47 @@
+﻿{{define "content"}}
+{{$d := .Data}}
+<h2>School settings</h2>
+<p class="muted">The name, logo and colour appear on every page of this site.</p>
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+{{if $d.Notice}}<p class="success">{{$d.Notice}}</p>{{end}}
+{{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
+
+<form method="post" action="/admin/settings" class="card wide">
+  <label for="name">School name</label>
+  <input type="text" id="name" name="name" value="{{$d.Form.Name}}" required maxlength="60">
+
+  <label for="accent">Theme colour</label>
+  <input type="color" id="accent" name="accent" value="{{$d.AccentInput}}" class="color-input">
+  <div class="swatches">
+    {{range $d.Presets}}<button type="button" class="swatch" data-color="{{.Hex}}" title="{{.Name}}" aria-label="{{.Name}}"></button>{{end}}
+  </div>
+  <label class="check"><input type="checkbox" id="use_default" name="use_default" value="1" {{if $d.Form.UseDefault}}checked{{end}}> Use the default blue</label>
+  <p class="muted small">Buttons, links and the top bar follow this colour, in light and dark mode. If the colour is too light to read, it is darkened automatically.</p>
+  <span id="preview-button" class="preview-button">Sample button</span>
+
+  <button type="submit">Save</button>
+</form>
+
+<h3>School logo</h3>
+<div class="card wide">
+  {{if $d.HasLogo}}
+    <img src="/logo?v={{$d.LogoVersion}}" alt="Current logo" class="logo-preview">
+  {{else}}
+    <p class="muted">No logo yet. The first letter of the school name is shown instead.</p>
+  {{end}}
+
+  <form method="post" action="/admin/settings/logo" enctype="multipart/form-data">
+    <label for="logo">Upload a logo (PNG, JPEG or GIF, up to 1 MB)</label>
+    <input type="file" id="logo" name="logo" accept="image/png,image/jpeg,image/gif" required>
+    <button type="submit">Upload logo</button>
+  </form>
+
+  {{if $d.HasLogo}}
+  <form method="post" action="/admin/settings/logo/delete" class="inline-form" onsubmit="return confirm('Remove the logo?')">
+    <button type="submit" class="danger">Remove logo</button>
+  </form>
+  {{end}}
+</div>
+
+<script src="/static/js/settings.js"></script>
+{{end}}

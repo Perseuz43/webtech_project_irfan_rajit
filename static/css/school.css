@@ -1,0 +1,76 @@
+﻿/* school branding: logo and name in the corner */
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 2px;
+  flex: none;
+}
+.brand-logo.big { display: block; width: 64px; height: 64px; margin: 0 auto 1rem; padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
+
+.brand-name {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+/* top-left badge on pages without a top bar (home and login) */
+.school-corner {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: calc(100% - 6rem);
+  color: var(--text);
+  font-weight: 700;
+}
+.school-corner .brand-logo { border: 1px solid var(--border); }
+
+/* name and logo at the top of printed pages */
+.print-brand { display: none; }
+
+/* settings page */
+.color-input { height: 44px; padding: 4px; cursor: pointer; }
+.swatches { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.6rem 0; }
+.swatch {
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  cursor: pointer;
+}
+.swatch:hover { transform: scale(1.1); }
+.preview-button {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 600;
+  background: #2563eb;
+}
+.logo-preview {
+  display: block;
+  max-width: 160px;
+  max-height: 160px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 0.5rem;
+}
+
+@media print {
+  .print-brand { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; font-size: 1.1rem; }
+  .print-brand .brand-logo { width: 40px; height: 40px; border: 1px solid #999999; }
+  .school-corner { display: none; }
+}

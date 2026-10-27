@@ -1,7 +1,11 @@
 ﻿{{define "content"}}
 <div class="hero">
-  <span class="brand-mark big">S</span>
-  <h2>School Management System</h2>
+  {{if .School.HasLogo}}
+    <img src="/logo?v={{.School.LogoVersion}}" alt="" class="brand-logo big">
+  {{else}}
+    <span class="brand-mark big">{{.School.Initial}}</span>
+  {{end}}
+  <h2>{{.School.Name}}</h2>
   <p class="muted">Classes, students, teachers and attendance in one place.</p>
   <a href="/login" class="button">Sign in</a>
 </div>
