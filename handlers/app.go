@@ -25,12 +25,13 @@ type SessionUser struct {
 }
 
 type PageData struct {
-    Title string
-    User  *SessionUser
-    Error string
-    Data  any
-    Theme string
-    Path  string
+    Title  string
+    User   *SessionUser
+    Error  string
+    Data   any
+    Theme  string
+    Path   string
+    School SchoolInfo
 }
 
 // New parses every page in the templates folder together with the shared layout.
@@ -79,6 +80,7 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, page string, status
     data.User = a.currentUser(r)
     data.Theme = a.themeFor(r)
     data.Path = r.URL.Path
+    data.School = a.schoolInfo()
 
     var buf bytes.Buffer
     if err := tmpl.ExecuteTemplate(&buf, "base", data); err != nil {

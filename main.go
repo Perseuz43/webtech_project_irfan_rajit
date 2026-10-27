@@ -35,6 +35,9 @@ func main() {
     if err := database.MigrateFees(db); err != nil {
         log.Fatal("fee tables migration failed: ", err)
     }
+    if err := database.MigrateSchool(db); err != nil {
+        log.Fatal("school table migration failed: ", err)
+    }
     log.Println("Database connected and migrated:", cfg.DBPath)
 
     if err := models.SeedAdmin(db, cfg.AdminPassword); err != nil {
@@ -75,6 +78,7 @@ func main() {
     mux.HandleFunc("POST /login", app.Login)
     mux.HandleFunc("POST /logout", app.Logout)
     mux.HandleFunc("POST /theme", app.SetTheme)
+    mux.HandleFunc("GET /logo", app.LogoServe)
 
     // logged-in pages (every role)
     mux.Handle("GET /dashboard", login(app.Dashboard))
@@ -84,6 +88,11 @@ func main() {
 
     // admin pages
     mux.Handle("GET /admin", admin(app.AdminHome))
+
+    mux.Handle("GET /admin/settings", admin(app.SettingsPage))
+    mux.Handle("POST /admin/settings", admin(app.SettingsSave))
+    mux.Handle("POST /admin/settings/logo", admin(app.LogoUpload))
+    mux.Handle("POST /admin/settings/logo/delete", admin(app.LogoRemove))
 
     mux.Handle("GET /admin/users", admin(app.UserList))
     mux.Handle("GET /admin/users/{id}/password", admin(app.UserPasswordForm))
