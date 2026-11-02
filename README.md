@@ -19,3 +19,8 @@ A web-based school management system built with Go for my Web Technology course 
 ## How to run
     go run main.go
 Then open http://localhost:8080
+
+## Default admin login (change it after your first login):
+
+- Username: admin
+- Password: admin123
