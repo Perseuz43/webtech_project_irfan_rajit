@@ -48,6 +48,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
+  {{if .School.HasLogo}}<link rel="icon" href="/logo?v={{.School.LogoVersion}}">{{else}}<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">{{end}}
   <title>{{.Title}} | {{.School.Name}}</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="stylesheet" href="/static/css/extra.css">
@@ -56,6 +57,7 @@
   <link rel="stylesheet" href="/static/css/account.css">
   <link rel="stylesheet" href="/static/css/directory.css">
   <link rel="stylesheet" href="/static/css/school.css">
+  <link rel="stylesheet" href="/static/css/ui.css?v=1">
   {{if .School.CSS}}<style>{{.School.CSS}}</style>{{end}}
 </head>
 <body class="{{if .User}}app{{else}}public{{end}}">
@@ -109,6 +111,7 @@
   </main>
 
   <script src="/static/js/theme.js"></script>
+  <script src="/static/js/ui.js?v=1" defer></script>
 </body>
 </html>
 {{end}}

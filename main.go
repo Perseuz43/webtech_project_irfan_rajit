@@ -193,6 +193,14 @@ func main() {
     mux.Handle("GET /children/{id}/fees", parent(app.ChildFees))
     mux.Handle("GET /children/{id}/fees/receipts/{pid}", parent(app.ChildReceipt))
 
+    // browsers ask for /favicon.ico on their own; point them at our icon
+    mux.HandleFunc("GET /favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+        http.Redirect(w, r, "/static/favicon.svg", http.StatusFound)
+    })
+
+    // anything that matches no other route gets a friendly 404 page
+    mux.HandleFunc("/", app.NotFound)
+
     // block cross-site form submissions (CSRF protection)
     cop := http.NewCrossOriginProtection()
 

@@ -21,6 +21,11 @@
   {{end}}
 </table>
 {{else}}
-<p class="muted">No parents yet.</p>
+<div class="empty-state">
+  <div class="empty-icon" aria-hidden="true">👪</div>
+  <h3>No parents yet</h3>
+  <p class="muted">Add a parent account and link it to their children.</p>
+  <a href="/admin/parents/new" class="button">Add parent</a>
+</div>
 {{end}}
 {{end}}

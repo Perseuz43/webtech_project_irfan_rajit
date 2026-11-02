@@ -1,0 +1,16 @@
+{{define "content"}}
+<div class="error-page">
+  <p class="error-code">404</p>
+  <h2>Page not found</h2>
+  <p class="muted">We could not find the page you were looking for. The link may be wrong, or the page may have been moved.</p>
+  {{with .Data}}<p><code>{{.}}</code></p>{{end}}
+  <div class="error-actions">
+    {{if .User}}
+      <a class="button" href="/dashboard">Go to dashboard</a>
+    {{else}}
+      <a class="button" href="/login">Go to login</a>
+    {{end}}
+    <a class="button secondary" href="/" onclick="if (history.length > 1) { history.back(); return false; }">Go back</a>
+  </div>
+</div>
+{{end}}

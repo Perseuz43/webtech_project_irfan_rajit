@@ -23,6 +23,11 @@
   {{end}}
 </table>
 {{else}}
-<p>No teachers yet.</p>
+<div class="empty-state">
+  <div class="empty-icon" aria-hidden="true">🧑‍🏫</div>
+  <h3>No teachers yet</h3>
+  <p class="muted">Add a teacher to give them a login and assign subjects.</p>
+  <a href="/admin/teachers/new" class="button">Add teacher</a>
+</div>
 {{end}}
 {{end}}

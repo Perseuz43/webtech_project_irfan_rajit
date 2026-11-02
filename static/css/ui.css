@@ -1,0 +1,110 @@
+/* ui.css - styles for the usability helpers in static/js/ui.js,
+   plus the empty-state boxes and the 404 page. */
+
+/* ---------- menu: clearer "you are here" marker ---------- */
+.nav a { transition: background 0.15s, opacity 0.15s; }
+.nav a.active { box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.85); }
+
+/* ---------- sortable table headers ---------- */
+tr[hidden] { display: none !important; }
+th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+th.sortable:hover { color: var(--text); }
+th.sortable:focus-visible { outline: 2px solid var(--link); outline-offset: -2px; }
+th.sortable::after { content: "\2195"; margin-left: 0.4rem; opacity: 0.35; font-size: 0.85em; }
+th.sortable.sorted-asc::after { content: "\25B2"; opacity: 0.9; font-size: 0.7em; }
+th.sortable.sorted-desc::after { content: "\25BC"; opacity: 0.9; font-size: 0.7em; }
+
+/* ---------- search box above tables ---------- */
+.table-tools { display: flex; align-items: center; gap: 0.75rem; margin: 1rem 0 0; }
+.table-tools input[type="search"] { width: 100%; max-width: 320px; }
+.table-tools + table { margin-top: 0.6rem; }
+.table-empty { margin: 0.75rem 0; }
+@media print { .table-tools, .table-empty { display: none; } }
+
+/* ---------- success messages fade out ---------- */
+.success { transition: opacity 0.5s, max-height 0.5s, margin 0.5s, padding 0.5s, border-width 0.5s; }
+.success.fading {
+  opacity: 0;
+  max-height: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-width: 0 !important;
+  overflow: hidden;
+}
+
+/* ---------- show / hide password ---------- */
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 4.5rem; }
+button.pw-toggle {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 0.25rem 0.6rem;
+  background: transparent;
+  color: var(--link);
+  font-size: 0.82rem;
+  border-radius: 6px;
+}
+button.pw-toggle:hover { background: var(--surface-2); }
+
+/* ---------- button while the form is being sent ---------- */
+button.is-loading { opacity: 0.8; cursor: progress; }
+button.is-loading::before {
+  content: "";
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 0.5em;
+  vertical-align: -0.1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: ui-spin 0.7s linear infinite;
+}
+@keyframes ui-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  button.is-loading::before { animation: none; }
+  .success { transition: none; }
+}
+
+/* ---------- empty states ---------- */
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  margin: 1.25rem 0;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+.empty-state .empty-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 0.5rem; }
+.empty-state h3 { margin: 0 0 0.35rem; }
+.empty-state p { margin: 0 auto 1rem; max-width: 420px; }
+.empty-state p:last-child { margin-bottom: 0; }
+
+/* ---------- 404 page ---------- */
+.error-page { text-align: center; max-width: 520px; margin: 3rem auto; }
+.error-page .error-code {
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0 0 0.5rem;
+  color: var(--link);
+  letter-spacing: 0.03em;
+}
+.error-page code {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  padding: 0.15rem 0.5rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+.error-actions { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+a.button.secondary { background: transparent; color: var(--link); border: 1px solid var(--border); }
+a.button.secondary:hover { background: var(--surface-2); }

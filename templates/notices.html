@@ -16,6 +16,19 @@
     {{end}}
   {{end}}
 {{else}}
-  <p class="muted">There are no notices for you right now.</p>
+  {{if eq .User.Role "admin"}}
+  <div class="empty-state">
+    <div class="empty-icon" aria-hidden="true">📢</div>
+    <h3>No notices yet</h3>
+    <p class="muted">Post an announcement and it will appear here for the people it is meant for.</p>
+    <a href="/admin/notices/new" class="button">Post a notice</a>
+  </div>
+  {{else}}
+  <div class="empty-state">
+    <div class="empty-icon" aria-hidden="true">📭</div>
+    <h3>No notices right now</h3>
+    <p class="muted">You are all caught up. New announcements will appear here.</p>
+  </div>
+  {{end}}
 {{end}}
 {{end}}

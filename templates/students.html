@@ -25,6 +25,11 @@
   {{end}}
 </table>
 {{else}}
-<p>No students yet.</p>
+<div class="empty-state">
+  <div class="empty-icon" aria-hidden="true">🎓</div>
+  <h3>No students yet</h3>
+  <p class="muted">Add your first student and they will show up here.</p>
+  <a href="/admin/students/new" class="button">Add student</a>
+</div>
 {{end}}
 {{end}}
