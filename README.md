@@ -2,13 +2,14 @@
 
 A web-based school management system built with Go for my Web Technology course project.
 
-## Planned features
-- Role-based login (Admin, Teacher, Student)
-- Student and teacher management
-- Classes, sections, and subjects
-- Attendance
-- Exams and results
-- Notices and fees
+## Features
+- Role-based login (admin, teacher, student, parent)
+- Student, teacher and parent management
+- Classes, sections and subjects
+- Attendance and attendance reports
+- Exams, marks, grading systems and report cards
+- Fees, payments, receipts and dues report
+- Notices, school branding and light/dark theme
 
 ## Tech stack
 - Go (net/http, html/template)
