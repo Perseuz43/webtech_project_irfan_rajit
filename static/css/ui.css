@@ -108,3 +108,11 @@ button.is-loading::before {
 .error-actions { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
 a.button.secondary { background: transparent; color: var(--link); border: 1px solid var(--border); }
 a.button.secondary:hover { background: var(--surface-2); }
+
+/* dashboard tiles: small lift on hover */
+.tile { transition: transform 0.15s, box-shadow 0.15s; }
+.tile:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
+@media (prefers-reduced-motion: reduce) {
+  .tile { transition: none; }
+  .tile:hover { transform: none; }
+}
