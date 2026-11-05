@@ -128,6 +128,8 @@ func main() {
     mux.Handle("POST /admin/students/{id}/delete", admin(app.StudentDelete))
     mux.Handle("GET /admin/students/export.csv", admin(app.StudentExport))
     mux.Handle("GET /admin/students/{id}/details", admin(app.StudentDetails))
+    mux.Handle("GET /admin/students/{id}/id-card", admin(app.IDCardOne))
+    mux.Handle("GET /admin/id-cards", admin(app.IDCardsPage))
     mux.Handle("POST /admin/students/{id}/photo", admin(app.StudentPhotoUpload))
     mux.Handle("POST /admin/students/{id}/photo/delete", admin(app.StudentPhotoRemove))
     mux.Handle("GET /admin/students/import", admin(app.StudentImportForm))

@@ -1,7 +1,7 @@
 ﻿{{define "content"}}
 <h2>Students</h2>
 <p><a href="/admin">&larr; Admin area</a></p>
-<p><a href="/admin/students/new" class="button">Add student</a> <a href="/admin/students/import" class="button secondary">Import from CSV</a> <a href="/admin/students/export.csv" class="button secondary">Export to CSV</a></p>
+<p><a href="/admin/students/new" class="button">Add student</a> <a href="/admin/students/import" class="button secondary">Import from CSV</a> <a href="/admin/students/export.csv" class="button secondary">Export to CSV</a> <a href="/admin/id-cards" class="button secondary">Print ID cards</a></p>
 
 {{if .Data}}
 <table>
@@ -19,6 +19,7 @@
     <td class="actions">
       <a href="/admin/students/{{.ID}}/edit">Edit</a>
       <a href="/admin/students/{{.ID}}/details">Photo</a>
+      <a href="/admin/students/{{.ID}}/id-card">ID card</a>
       <form method="post" action="/admin/students/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this student and their login account?')">
         <button type="submit" class="danger">Delete</button>
       </form>

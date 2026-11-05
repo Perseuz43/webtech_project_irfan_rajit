@@ -1,0 +1,59 @@
+{{define "content"}}
+{{$d := .Data}}
+{{$school := .School}}
+
+<div class="no-print">
+  <h2>{{if $d.Single}}ID card{{else}}Student ID cards{{end}}</h2>
+  <p><a href="/admin/students">&larr; Students</a></p>
+
+  {{if not $d.Single}}
+  <form method="get" action="/admin/id-cards" class="inline-form">
+    <select name="class_id" aria-label="Class">
+      <option value="">All classes</option>
+      {{range $d.Classes}}<option value="{{.ID}}" {{if eq $d.ClassID .ID}}selected{{end}}>{{.Name}}</option>{{end}}
+    </select>
+    <select name="section_id" aria-label="Section">
+      <option value="">All sections</option>
+      {{range $c := $d.Classes}}{{range $d.Sections}}{{if eq .ClassID $c.ID}}<option value="{{.ID}}" {{if eq $d.SectionID .ID}}selected{{end}}>{{$c.Name}} - {{.Name}}</option>{{end}}{{end}}{{end}}
+    </select>
+    <button type="submit">Show</button>
+  </form>
+  {{end}}
+
+  {{if $d.Students}}
+  <div class="actions-bar">
+    <button type="button" onclick="window.print()">Print {{len $d.Students}} card{{if ne (len $d.Students) 1}}s{{end}}</button>
+    <span class="muted small">Tip: in the print window choose A4, margins "Default" and turn on "Background graphics".</span>
+  </div>
+  {{if $d.NoPhoto}}
+  <p class="muted">{{$d.NoPhoto}} of these students {{if eq $d.NoPhoto 1}}has{{else}}have{{end}} no photo yet, so their card shows a letter instead. Add photos with the <strong>Photo</strong> link on the Students page.</p>
+  {{end}}
+  {{end}}
+</div>
+
+{{if $d.Students}}
+<div class="id-sheet">
+  {{range $d.Students}}
+  <div class="id-card">
+    <div class="id-head">
+      {{if $school.HasLogo}}<img class="id-logo" src="/logo?v={{$school.LogoVersion}}" alt="">{{else}}<span class="id-logo id-logo-letter">{{$school.Initial}}</span>{{end}}
+      <span class="id-school">{{$school.Name}}</span>
+    </div>
+    <div class="id-body">
+      <div class="id-photo">{{if .PhotoVersion}}<img src="/students/{{.ID}}/photo?v={{.PhotoVersion}}" alt="">{{else}}<span class="id-photo-letter">{{.Initial}}</span>{{end}}</div>
+      <div class="id-info">
+        <div class="id-name">{{.Name}}</div>
+        <div class="id-line"><span>Class</span> {{if .ClassName}}{{.ClassName}}{{else}}-{{end}}{{if .SectionName}} ({{.SectionName}}){{end}}</div>
+        <div class="id-line"><span>Roll</span> {{.Roll}}</div>
+        {{if .GuardianName}}<div class="id-line"><span>Guardian</span> {{.GuardianName}}</div>{{end}}
+        {{if .Phone}}<div class="id-line"><span>Phone</span> {{.Phone}}</div>{{end}}
+      </div>
+    </div>
+    <div class="id-foot">Student ID card {{$d.Year}}</div>
+  </div>
+  {{end}}
+</div>
+{{else}}
+<p class="muted no-print">No students to show.</p>
+{{end}}
+{{end}}

@@ -35,3 +35,31 @@ td.thumb-cell { width: 1%; padding-right: 0; }
   .report-student .avatar { display: none; }
   .student-photo, .avatar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* ---------- printable ID cards (credit-card size: 85.6 x 54 mm) ---------- */
+.id-sheet { display: flex; flex-wrap: wrap; gap: 6mm; margin: 1rem 0; }
+.id-card {
+  width: 85.6mm; height: 54mm; box-sizing: border-box; overflow: hidden;
+  display: flex; flex-direction: column;
+  background: #fff; color: #111; border: 1px solid #c9ced8; border-radius: 3mm;
+  font-size: 9pt; line-height: 1.25; break-inside: avoid; page-break-inside: avoid;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.id-head { display: flex; align-items: center; gap: 2.5mm; padding: 2mm 3mm; background: var(--btn); color: #fff; }
+.id-logo { width: 9mm; height: 9mm; object-fit: contain; border-radius: 1.5mm; background: #fff; flex: none; }
+.id-logo-letter { display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: var(--btn); }
+.id-school { font-weight: 700; font-size: 10pt; letter-spacing: 0.02em; }
+.id-body { flex: 1; display: flex; gap: 3mm; padding: 2.5mm 3mm; min-height: 0; }
+.id-photo { width: 24mm; height: 30mm; flex: none; border-radius: 1.5mm; overflow: hidden; background: #e8ecf4; border: 1px solid #c9ced8; }
+.id-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.id-photo-letter { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: 22pt; font-weight: 700; color: #5b6b8c; }
+.id-info { min-width: 0; }
+.id-name { font-weight: 700; font-size: 11pt; margin-bottom: 1.5mm; }
+.id-line { margin: 0.4mm 0; overflow-wrap: anywhere; }
+.id-line span { display: inline-block; min-width: 14mm; color: #5b6b8c; }
+.id-foot { padding: 1mm 3mm; text-align: center; font-size: 7pt; color: #5b6b8c; border-top: 1px solid #e1e5ee; }
+@media print {
+  @page { size: A4; margin: 10mm; }
+  .id-sheet { gap: 5mm; margin: 0; }
+  .id-card { border-color: #999; }
+}
