@@ -20,6 +20,15 @@ type Student struct {
     SectionName  string
     GuardianName string
     Phone        string
+    PhotoVersion string // "" when the student has no photo
+}
+
+// Initial is the first letter of the name, shown when there is no photo.
+func (s Student) Initial() string {
+    if runes := []rune(strings.TrimSpace(s.Name)); len(runes) > 0 {
+        return strings.ToUpper(string(runes[0]))
+    }
+    return "?"
 }
 
 type StudentInput struct {
@@ -36,9 +45,10 @@ type StudentInput struct {
 const studentSelect = `SELECT s.id, s.user_id, u.username, s.name, s.roll,
     COALESCE(s.class_id, 0), COALESCE(c.name, ''),
     COALESCE(s.section_id, 0), COALESCE(sec.name, ''),
-    s.guardian_name, s.phone
+    s.guardian_name, s.phone, COALESCE(ph.version, '')
     FROM students s
     JOIN users u ON u.id = s.user_id
+    LEFT JOIN student_photos ph ON ph.student_id = s.id
     LEFT JOIN classes c ON c.id = s.class_id
     LEFT JOIN sections sec ON sec.id = s.section_id`
 
@@ -51,7 +61,7 @@ func scanStudent(row rowScanner) (*Student, error) {
     s := &Student{}
     err := row.Scan(&s.ID, &s.UserID, &s.Username, &s.Name, &s.Roll,
         &s.ClassID, &s.ClassName, &s.SectionID, &s.SectionName,
-        &s.GuardianName, &s.Phone)
+        &s.GuardianName, &s.Phone, &s.PhotoVersion)
     if err != nil {
         return nil, err
     }

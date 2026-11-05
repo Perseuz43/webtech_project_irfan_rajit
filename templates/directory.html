@@ -27,11 +27,12 @@
 <p class="muted">{{len $d.Entries}} student(s)</p>
 <table>
   <tr>
-    <th>Roll</th><th>Student</th><th>Class</th><th>Parents and contact</th>
+    <th></th><th>Roll</th><th>Student</th><th>Class</th><th>Parents and contact</th>
     {{if eq .User.Role "admin"}}<th class="no-print"></th>{{end}}
   </tr>
   {{range $d.Entries}}
   <tr>
+    <td class="thumb-cell">{{if .PhotoVersion}}<img class="student-photo photo-sm" src="/students/{{.StudentID}}/photo?v={{.PhotoVersion}}" alt="" loading="lazy">{{else}}<span class="avatar avatar-sm" aria-hidden="true">{{.Initial}}</span>{{end}}</td>
     <td>{{.Roll}}</td>
     <td>{{.Name}}</td>
     <td>{{if .ClassName}}{{.ClassName}}{{else}}-{{end}}{{if .SectionName}} {{.SectionName}}{{end}}</td>

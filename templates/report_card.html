@@ -10,11 +10,14 @@
   <h2 class="doc-title">Report Card</h2>
   <p class="report-sub">{{$c.Exam.Name}} | {{$c.Exam.ClassName}} | {{$c.Exam.Date}}</p>
 
-  <table class="profile">
-    <tr><th>Student</th><td>{{$c.Student.Name}}</td></tr>
-    <tr><th>Roll number</th><td>{{$c.Student.Roll}}</td></tr>
-    <tr><th>Class</th><td>{{$c.Student.ClassName}}{{if $c.Student.SectionName}} {{$c.Student.SectionName}}{{end}}</td></tr>
-  </table>
+  <div class="report-student">
+    <table class="profile">
+      <tr><th>Student</th><td>{{$c.Student.Name}}</td></tr>
+      <tr><th>Roll number</th><td>{{$c.Student.Roll}}</td></tr>
+      <tr><th>Class</th><td>{{$c.Student.ClassName}}{{if $c.Student.SectionName}} {{$c.Student.SectionName}}{{end}}</td></tr>
+    </table>
+    {{template "studentPhotoLarge" $c.Student}}
+  </div>
 
   <table class="marks-table">
     <tr>

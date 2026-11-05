@@ -41,6 +41,10 @@
 
   {{with .Student}}
   <h3>My profile</h3>
+  <div class="profile-head">
+    {{template "studentPhotoLarge" .}}
+    <div><strong>{{.Name}}</strong><br><span class="muted">{{if .ClassName}}{{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}} | Roll {{.Roll}}</span></div>
+  </div>
   <table class="profile">
     <tr><th>Name</th><td>{{.Name}}</td></tr>
     <tr><th>Roll number</th><td>{{.Roll}}</td></tr>
@@ -78,6 +82,7 @@
   <div class="tiles">
     {{range $d.Children}}
     <div class="tile">
+      <div class="tile-photo">{{template "studentThumb" .}}</div>
       <strong>{{.Name}}</strong>
       <span>{{if .ClassName}}{{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}} | Roll {{.Roll}}</span>
       <div class="tile-links">

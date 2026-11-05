@@ -19,3 +19,19 @@ input[type="file"] { padding: 0.5rem; }
   background: var(--btn); color: #fff; font-weight: 700; border-radius: 10px; flex: none;
 }
 .avatar.avatar-lg { width: 120px; height: 160px; font-size: 3rem; }
+
+/* ---------- photos in lists, profiles and report cards ---------- */
+.student-photo.photo-sm { width: 36px; height: 36px; border-radius: 50%; }
+.avatar.avatar-sm { width: 36px; height: 36px; border-radius: 50%; font-size: 0.95rem; }
+td.thumb-cell { width: 1%; padding-right: 0; }
+.profile-head { display: flex; align-items: center; gap: 1rem; margin: 0.5rem 0 1rem; }
+.tile-photo { margin-bottom: 0.5rem; }
+.report-student { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
+.report-student table.profile { flex: 1; }
+.report-student .student-photo.photo-lg, .report-student .avatar.avatar-lg {
+  width: 96px; height: 128px; font-size: 2.4rem; margin: 1rem 0;
+}
+@media print {
+  .report-student .avatar { display: none; }
+  .student-photo, .avatar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

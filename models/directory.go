@@ -19,7 +19,16 @@ type DirectoryEntry struct {
     SectionName   string
     GuardianName  string // from the student's own profile
     GuardianPhone string
+    PhotoVersion  string
     Parents       []ParentContact // from linked parent accounts
+}
+
+// Initial is the first letter of the name, shown when there is no photo.
+func (e DirectoryEntry) Initial() string {
+    if runes := []rune(strings.TrimSpace(e.Name)); len(runes) > 0 {
+        return strings.ToUpper(string(runes[0]))
+    }
+    return "?"
 }
 
 func escapeLike(s string) string {
@@ -67,8 +76,9 @@ func ListDirectory(db *sql.DB, role string, userID, classID, sectionID int, quer
     where, args := directoryFilter(role, userID, classID, sectionID, query)
 
     rows, err := db.Query(`SELECT s.id, s.roll, s.name, COALESCE(c.name, ''), COALESCE(sec.name, ''),
-        s.guardian_name, s.phone
+        s.guardian_name, s.phone, COALESCE(ph.version, '')
         FROM students s
+        LEFT JOIN student_photos ph ON ph.student_id = s.id
         LEFT JOIN classes c ON c.id = s.class_id
         LEFT JOIN sections sec ON sec.id = s.section_id
         WHERE `+where+`
@@ -82,7 +92,7 @@ func ListDirectory(db *sql.DB, role string, userID, classID, sectionID int, quer
     for rows.Next() {
         var e DirectoryEntry
         if err := rows.Scan(&e.StudentID, &e.Roll, &e.Name, &e.ClassName, &e.SectionName,
-            &e.GuardianName, &e.GuardianPhone); err != nil {
+            &e.GuardianName, &e.GuardianPhone, &e.PhotoVersion); err != nil {
             rows.Close()
             return nil, err
         }
