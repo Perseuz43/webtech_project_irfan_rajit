@@ -129,6 +129,7 @@ func main() {
     mux.Handle("GET /admin/students/export.csv", admin(app.StudentExport))
     mux.Handle("GET /admin/students/{id}/details", admin(app.StudentDetails))
     mux.Handle("GET /admin/students/{id}/id-card", admin(app.IDCardOne))
+    mux.Handle("POST /admin/students/{id}/dob", admin(app.StudentDOBSave))
     mux.Handle("GET /admin/id-cards", admin(app.IDCardsPage))
     mux.Handle("POST /admin/students/{id}/photo", admin(app.StudentPhotoUpload))
     mux.Handle("POST /admin/students/{id}/photo/delete", admin(app.StudentPhotoRemove))
@@ -191,6 +192,7 @@ func main() {
 
     // student directory: admins see everyone, teachers only their own classes
     mux.Handle("GET /students", staff(app.StudentDirectory))
+    mux.Handle("GET /birthdays", staff(app.BirthdaysPage))
     mux.Handle("GET /students/{id}/photo", login(app.StudentPhotoServe))
 
     // attendance: admins and teachers mark and report, students view their own

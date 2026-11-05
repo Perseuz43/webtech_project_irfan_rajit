@@ -31,4 +31,14 @@
   </form>
   {{end}}
 </div>
+
+<div class="card wide">
+  <h3>Date of birth</h3>
+  <form method="post" action="/admin/students/{{$s.ID}}/dob">
+    <label for="dob">Date of birth</label>
+    <input type="date" id="dob" name="dob" value="{{$d.DOB}}" min="1920-01-01">
+    <p class="muted small">Used for the birthday list. Leave it empty and save to clear it.</p>
+    <button type="submit">Save date of birth</button>
+  </form>
+</div>
 {{end}}

@@ -15,6 +15,7 @@ type StudentDetailsData struct {
     Initial      string
     HasPhoto     bool
     PhotoVersion string
+    DOB          string
     Notice       string
 }
 
@@ -50,12 +51,17 @@ func (a *App) renderStudentDetails(w http.ResponseWriter, r *http.Request, statu
         a.serverError(w, err)
         return
     }
+    dob, err := models.GetStudentDOB(a.DB, s.ID)
+    if err != nil {
+        a.serverError(w, err)
+        return
+    }
     a.render(w, r, "student_details", status, PageData{
         Title: "Photo and details",
         Error: msg,
         Data: StudentDetailsData{
             Student: s, Initial: initialOf(s.Name),
-            HasPhoto: version != "", PhotoVersion: version, Notice: notice,
+            HasPhoto: version != "", PhotoVersion: version, DOB: dob, Notice: notice,
         },
     })
 }
@@ -71,6 +77,8 @@ func (a *App) StudentDetails(w http.ResponseWriter, r *http.Request) {
         notice = "The photo was saved."
     case "photo-removed":
         notice = "The photo was removed."
+    case "dob":
+        notice = "The date of birth was saved."
     }
     a.renderStudentDetails(w, r, http.StatusOK, s, "", notice)
 }

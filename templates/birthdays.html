@@ -1,0 +1,51 @@
+{{define "content"}}
+{{$d := .Data}}
+<h2>Birthdays</h2>
+
+<form method="get" action="/birthdays" class="inline-form no-print">
+  <select name="days" aria-label="Time range">
+    {{range $d.Choices}}<option value="{{.Days}}" {{if eq $d.Days .Days}}selected{{end}}>{{.Label}}</option>{{end}}
+  </select>
+  <button type="submit">Show</button>
+</form>
+
+{{if $d.Today}}
+<div class="birthday-today">
+  {{range $d.Today}}
+  <div class="birthday-card">
+    <div class="birthday-emoji" aria-hidden="true">🎂</div>
+    <div>
+      <strong>{{.Name}}</strong> turns {{.Turning}} today!
+      <div class="muted small">{{if .ClassName}}{{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}} | Roll {{.Roll}}</div>
+    </div>
+  </div>
+  {{end}}
+</div>
+{{end}}
+
+{{if $d.Upcoming}}
+<table>
+  <tr><th></th><th>Date</th><th>Student</th><th>Class</th><th>Turning</th><th>In</th></tr>
+  {{range $d.Upcoming}}
+  <tr>
+    <td class="thumb-cell">{{if .PhotoVersion}}<img class="student-photo photo-sm" src="/students/{{.StudentID}}/photo?v={{.PhotoVersion}}" alt="" loading="lazy">{{else}}<span class="avatar avatar-sm" aria-hidden="true">{{.Initial}}</span>{{end}}</td>
+    <td data-sort="{{.DaysUntil}}">{{.DateLabel}}</td>
+    <td>{{.Name}}</td>
+    <td>{{if .ClassName}}{{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}}</td>
+    <td>{{.Turning}}</td>
+    <td data-sort="{{.DaysUntil}}">{{if eq .DaysUntil 1}}tomorrow{{else}}{{.DaysUntil}} days{{end}}</td>
+  </tr>
+  {{end}}
+</table>
+{{else if not $d.Today}}
+<div class="empty-state">
+  <div class="empty-icon" aria-hidden="true">🎈</div>
+  <h3>No birthdays in this time range</h3>
+  <p class="muted">Try a longer range{{if $d.IsAdmin}}, or add dates of birth with the <strong>Photo</strong> link on the Students page{{end}}.</p>
+</div>
+{{end}}
+
+{{if and $d.IsAdmin $d.NoDOB}}
+<p class="muted small">{{$d.NoDOB}} student{{if ne $d.NoDOB 1}}s have{{else}} has{{end}} no date of birth yet. <a href="/admin/students">Add them on the Students page</a> (open <strong>Photo</strong> next to a student).</p>
+{{end}}
+{{end}}
