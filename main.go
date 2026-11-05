@@ -123,6 +123,7 @@ func main() {
     mux.Handle("GET /admin/students/{id}/edit", admin(app.StudentEditForm))
     mux.Handle("POST /admin/students/{id}", admin(app.StudentUpdate))
     mux.Handle("POST /admin/students/{id}/delete", admin(app.StudentDelete))
+    mux.Handle("GET /admin/students/export.csv", admin(app.StudentExport))
     mux.Handle("GET /admin/students/import", admin(app.StudentImportForm))
     mux.Handle("POST /admin/students/import", admin(app.StudentImportRun))
     mux.Handle("GET /admin/students/import/sample.csv", admin(app.StudentImportSample))
@@ -171,6 +172,7 @@ func main() {
     mux.Handle("POST /admin/charges/{id}/payments/{pid}/delete", admin(app.PaymentDelete))
     mux.Handle("GET /admin/payments/{pid}/receipt", admin(app.ReceiptAdmin))
     mux.Handle("GET /admin/dues", admin(app.DuesReport))
+    mux.Handle("GET /admin/dues/export.csv", admin(app.DuesExport))
 
     // notices (admin writes, everyone reads their own on /notices)
     mux.Handle("GET /admin/notices/new", admin(app.NoticeNewForm))

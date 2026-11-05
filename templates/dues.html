@@ -12,7 +12,7 @@
 </form>
 
 {{if $d.Rows}}
-<p>Total outstanding: <strong>{{$d.TotalDue}}</strong></p>
+<p>Total outstanding: <strong>{{$d.TotalDue}}</strong> <a href="/admin/dues/export.csv{{if $d.ClassID}}?class_id={{$d.ClassID}}{{end}}" class="button secondary">Export to CSV</a></p>
 <table>
   <tr><th>Student</th><th>Class</th><th>Fee</th><th>Due date</th><th>Amount</th><th>Paid</th><th>Balance</th><th></th></tr>
   {{range $d.Rows}}
