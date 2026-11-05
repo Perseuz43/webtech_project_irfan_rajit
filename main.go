@@ -48,6 +48,9 @@ func main() {
     }
     log.Println("Database connected and migrated:", cfg.DBPath)
 
+    if err := database.MigrateFeatures(db); err != nil {
+        log.Fatal("module tables migration failed: ", err)
+    }
     if err := models.SeedAdmin(db, cfg.AdminPassword); err != nil {
         log.Fatal("creating default admin failed: ", err)
     }
@@ -124,6 +127,9 @@ func main() {
     mux.Handle("POST /admin/students/{id}", admin(app.StudentUpdate))
     mux.Handle("POST /admin/students/{id}/delete", admin(app.StudentDelete))
     mux.Handle("GET /admin/students/export.csv", admin(app.StudentExport))
+    mux.Handle("GET /admin/students/{id}/details", admin(app.StudentDetails))
+    mux.Handle("POST /admin/students/{id}/photo", admin(app.StudentPhotoUpload))
+    mux.Handle("POST /admin/students/{id}/photo/delete", admin(app.StudentPhotoRemove))
     mux.Handle("GET /admin/students/import", admin(app.StudentImportForm))
     mux.Handle("POST /admin/students/import", admin(app.StudentImportRun))
     mux.Handle("GET /admin/students/import/sample.csv", admin(app.StudentImportSample))
@@ -183,6 +189,7 @@ func main() {
 
     // student directory: admins see everyone, teachers only their own classes
     mux.Handle("GET /students", staff(app.StudentDirectory))
+    mux.Handle("GET /students/{id}/photo", login(app.StudentPhotoServe))
 
     // attendance: admins and teachers mark and report, students view their own
     mux.Handle("GET /attendance", staff(app.AttendancePage))

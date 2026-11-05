@@ -9,3 +9,13 @@
 .import-classes { padding-left: 1.2rem; }
 .import-classes .pill { margin-left: 0.25rem; }
 input[type="file"] { padding: 0.5rem; }
+
+/* ---------- student photos ---------- */
+.photo-box { display: flex; align-items: center; gap: 1.25rem; margin: 0.75rem 0 1rem; }
+.student-photo { display: block; object-fit: cover; border-radius: 10px; background: var(--surface-2); }
+.student-photo.photo-lg { width: 120px; height: 160px; }
+.avatar {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--btn); color: #fff; font-weight: 700; border-radius: 10px; flex: none;
+}
+.avatar.avatar-lg { width: 120px; height: 160px; font-size: 3rem; }

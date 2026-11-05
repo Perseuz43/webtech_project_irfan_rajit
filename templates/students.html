@@ -17,6 +17,7 @@
     <td>{{.Username}}</td>
     <td class="actions">
       <a href="/admin/students/{{.ID}}/edit">Edit</a>
+      <a href="/admin/students/{{.ID}}/details">Photo</a>
       <form method="post" action="/admin/students/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this student and their login account?')">
         <button type="submit" class="danger">Delete</button>
       </form>
