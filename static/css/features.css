@@ -1,0 +1,11 @@
+/* features.css - styles for the school modules added after the first release.
+   Each feature adds its own block below. */
+
+/* ---------- CSV import ---------- */
+.import-errors td:last-child { color: var(--danger); font-weight: 600; }
+.import-help { max-width: 640px; padding-left: 1.2rem; }
+.import-help li { margin: 0.35rem 0; }
+.import-columns code { background: var(--surface-2); padding: 0.1rem 0.4rem; border-radius: 4px; }
+.import-classes { padding-left: 1.2rem; }
+.import-classes .pill { margin-left: 0.25rem; }
+input[type="file"] { padding: 0.5rem; }

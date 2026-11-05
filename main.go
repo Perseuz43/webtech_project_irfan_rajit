@@ -14,6 +14,14 @@ import (
     "github.com/Perseuz43/webtech_project_irfan_rajit/models"
 )
 
+// noCache tells browsers to check with the server before reusing a file.
+func noCache(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Cache-Control", "no-cache")
+        next.ServeHTTP(w, r)
+    })
+}
+
 func main() {
     cfg := config.Load()
 
@@ -70,7 +78,8 @@ func main() {
     mux := http.NewServeMux()
 
     // serve CSS/JS files
-    mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+    // (no-cache means the browser re-checks the file each time, so edits show up right away)
+    mux.Handle("GET /static/", noCache(http.StripPrefix("/static/", http.FileServer(http.Dir("static")))))
 
     // public pages
     mux.HandleFunc("GET /{$}", app.Home)
@@ -114,6 +123,9 @@ func main() {
     mux.Handle("GET /admin/students/{id}/edit", admin(app.StudentEditForm))
     mux.Handle("POST /admin/students/{id}", admin(app.StudentUpdate))
     mux.Handle("POST /admin/students/{id}/delete", admin(app.StudentDelete))
+    mux.Handle("GET /admin/students/import", admin(app.StudentImportForm))
+    mux.Handle("POST /admin/students/import", admin(app.StudentImportRun))
+    mux.Handle("GET /admin/students/import/sample.csv", admin(app.StudentImportSample))
 
     mux.Handle("GET /admin/teachers", admin(app.TeacherList))
     mux.Handle("GET /admin/teachers/new", admin(app.TeacherNewForm))
