@@ -14,6 +14,10 @@ type DashboardData struct {
     Parent   *models.Parent
     Children []models.Student
     Notices  []models.Notice
+
+    Birthdays      []models.BirthdayEntry // admins and teachers: the coming week
+    MyBirthday     *models.BirthdayEntry  // a student whose birthday is today
+    ChildBirthdays []models.BirthdayEntry // a parent's children whose birthday is today
 }
 
 // Dashboard shows different content depending on the logged-in user's role.
@@ -65,6 +69,11 @@ func (a *App) Dashboard(w http.ResponseWriter, r *http.Request) {
         }
     }
 
+    if err := a.loadBirthdays(u, &data); err != nil {
+        a.serverError(w, err)
+        return
+    }
+
     notices, err := models.ListNoticesForUser(a.DB, u.Role, u.ID, 3)
     if err != nil {
         a.serverError(w, err)
@@ -73,4 +82,39 @@ func (a *App) Dashboard(w http.ResponseWriter, r *http.Request) {
     data.Notices = notices
 
     a.render(w, r, "dashboard", http.StatusOK, PageData{Title: "Dashboard", Data: data})
+}
+
+// loadBirthdays fills in the birthday parts of the dashboard for the logged-in role.
+func (a *App) loadBirthdays(u *SessionUser, data *DashboardData) error {
+    today := startOfToday()
+    switch u.Role {
+    case "admin", "teacher":
+        list, err := models.ListBirthdays(a.DB, u.Role, u.ID, today, 7)
+        if err != nil {
+            return err
+        }
+        data.Birthdays = list
+    case "student":
+        if data.Student == nil {
+            return nil
+        }
+        b, err := models.StudentBirthday(a.DB, data.Student.ID, today)
+        if err != nil {
+            return err
+        }
+        if b != nil && b.Today() {
+            data.MyBirthday = b
+        }
+    case "parent":
+        for _, child := range data.Children {
+            b, err := models.StudentBirthday(a.DB, child.ID, today)
+            if err != nil {
+                return err
+            }
+            if b != nil && b.Today() {
+                data.ChildBirthdays = append(data.ChildBirthdays, *b)
+            }
+        }
+    }
+    return nil
 }

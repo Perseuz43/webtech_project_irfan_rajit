@@ -72,3 +72,18 @@ td.thumb-cell { width: 1%; padding-right: 0; }
   border-radius: var(--radius);
 }
 .birthday-emoji { font-size: 2rem; line-height: 1; }
+
+/* ---------- birthdays on the dashboard ---------- */
+.birthday-banner {
+  max-width: 760px; margin: 1rem 0; padding: 0.9rem 1.1rem;
+  background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--btn);
+  border-radius: var(--radius); font-size: 1.05rem;
+}
+.birthday-list { list-style: none; margin: 0.5rem 0 1.25rem; padding: 0; max-width: 760px; }
+.birthday-list li {
+  display: grid; grid-template-columns: 7rem 1fr auto; gap: 0.75rem; align-items: baseline;
+  padding: 0.5rem 0.2rem; border-bottom: 1px solid var(--border);
+}
+.birthday-list li.is-today { font-weight: 600; }
+.birthday-list .bd-date { color: var(--muted); }
+.birthday-list li.is-today .bd-date { color: var(--btn); }

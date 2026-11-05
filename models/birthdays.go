@@ -93,6 +93,31 @@ func GetStudentDOB(db *sql.DB, studentID int) (string, error) {
     return dob, err
 }
 
+// StudentBirthday returns one student's next birthday, or nil when no date of birth is stored.
+func StudentBirthday(db *sql.DB, studentID int, today time.Time) (*BirthdayEntry, error) {
+    var e BirthdayEntry
+    err := db.QueryRow(`SELECT s.id, s.roll, s.name, COALESCE(c.name, ''), COALESCE(sec.name, ''), d.dob
+        FROM student_details d
+        JOIN students s ON s.id = d.student_id
+        LEFT JOIN classes c ON c.id = s.class_id
+        LEFT JOIN sections sec ON sec.id = s.section_id
+        WHERE d.student_id = ? AND d.dob <> ''`, studentID).
+        Scan(&e.StudentID, &e.Roll, &e.Name, &e.ClassName, &e.SectionName, &e.DOB)
+    if errors.Is(err, sql.ErrNoRows) {
+        return nil, nil
+    }
+    if err != nil {
+        return nil, err
+    }
+    dob, err := time.ParseInLocation("2006-01-02", e.DOB, today.Location())
+    if err != nil {
+        return nil, nil
+    }
+    e.Next, e.Turning = nextBirthday(dob, today)
+    e.DaysUntil = daysBetween(today, e.Next)
+    return &e, nil
+}
+
 // CountStudentsWithoutDOB tells the admin how many students still need a date of birth.
 func CountStudentsWithoutDOB(db *sql.DB) (int, error) {
     var n int

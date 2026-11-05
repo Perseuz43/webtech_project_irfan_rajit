@@ -30,6 +30,33 @@
 {{with .Data}}
   {{$d := .}}
 
+  {{with .MyBirthday}}
+  <div class="birthday-banner"><span aria-hidden="true">🎉</span> <strong>Happy birthday, {{.Name}}!</strong> You turn {{.Turning}} today.</div>
+  {{end}}
+  {{range .ChildBirthdays}}
+  <div class="birthday-banner"><span aria-hidden="true">🎂</span> Today is <strong>{{.Name}}</strong>'s birthday. They turn {{.Turning}}!</div>
+  {{end}}
+
+  {{if or (eq $.User.Role "admin") (eq $.User.Role "teacher")}}
+  <div class="dash-section-head">
+    <h3>Birthdays this week</h3>
+    <a href="/birthdays">See all</a>
+  </div>
+  {{if .Birthdays}}
+  <ul class="birthday-list">
+    {{range .Birthdays}}
+    <li{{if .Today}} class="is-today"{{end}}>
+      <span class="bd-date">{{if .Today}}Today{{else}}{{.DateLabel}}{{end}}</span>
+      <span><strong>{{.Name}}</strong> <span class="muted">{{if .ClassName}}{{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}}</span></span>
+      <span class="muted small">turns {{.Turning}}</span>
+    </li>
+    {{end}}
+  </ul>
+  {{else}}
+  <p class="muted">No birthdays this week.</p>
+  {{end}}
+  {{end}}
+
   <div class="dash-section-head">
     <h3>Latest notices</h3>
     <a href="/notices">View all</a>
