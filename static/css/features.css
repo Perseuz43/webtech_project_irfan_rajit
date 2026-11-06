@@ -87,3 +87,8 @@ td.thumb-cell { width: 1%; padding-right: 0; }
 .birthday-list li.is-today { font-weight: 600; }
 .birthday-list .bd-date { color: var(--muted); }
 .birthday-list li.is-today .bd-date { color: var(--btn); }
+
+/* ---------- report card remarks ---------- */
+.remarks-table textarea { width: 100%; min-width: 260px; resize: vertical; }
+.report-remark { margin: 1.25rem 0; padding: 0.75rem 1rem; border: 1px solid var(--border); border-left: 4px solid var(--btn); border-radius: 6px; break-inside: avoid; }
+.report-remark p { margin: 0.35rem 0 0; }

@@ -55,6 +55,13 @@
     <tr><th>Result</th><td class="res-{{$c.Status}}">{{$c.Status}}</td></tr>
   </table>
 
+  {{if $c.Remark}}
+  <div class="report-remark">
+    <strong>Teacher's remark</strong>
+    <p>{{$c.Remark}}</p>
+  </div>
+  {{end}}
+
   <p class="muted small">Grading system: {{$c.Scale.Name}}. Pass mark: {{printf "%g" $c.Scale.PassPercent}}%.</p>
 
   <div class="doc-sign">

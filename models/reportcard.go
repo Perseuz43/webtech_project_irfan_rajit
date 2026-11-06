@@ -25,6 +25,7 @@ type ReportCard struct {
     GPA        float64
     HasGPA     bool
     Status     string // Passed, Failed or Incomplete
+    Remark     string // the teacher's remark, "" when there is none
 }
 
 // BuildReportCard works out grades, totals, GPA and the result using the given grading system.
@@ -91,6 +92,10 @@ func BuildReportCard(db *sql.DB, student *Student, exam *Exam, scale *GradingSca
     if scale.UseGPA && rc.Status != "Incomplete" && entered > 0 {
         rc.GPA = points / float64(entered)
         rc.HasGPA = true
+    }
+
+    if rc.Remark, err = GetRemark(db, exam.ID, student.ID); err != nil {
+        return nil, err
     }
     return rc, nil
 }

@@ -202,6 +202,8 @@ func main() {
     mux.Handle("GET /my-attendance", student(app.MyAttendance))
 
     // marks entry: admins and teachers (teachers only for their own subjects)
+    mux.Handle("GET /remarks", staff(app.RemarksPage))
+    mux.Handle("POST /remarks", staff(app.RemarksSave))
     mux.Handle("GET /marks", staff(app.MarksPage))
     mux.Handle("POST /marks", staff(app.MarksSave))
 

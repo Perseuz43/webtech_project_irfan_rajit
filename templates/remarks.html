@@ -1,0 +1,43 @@
+{{define "content"}}
+{{$d := .Data}}
+<h2>Report card remarks</h2>
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+{{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
+{{if $d.Saved}}<p class="success">Remarks saved.</p>{{end}}
+
+{{if $d.Exams}}
+<form method="get" action="/remarks" class="inline-form wrap">
+  <select name="exam_id" required>
+    <option value="">Choose an exam</option>
+    {{range $d.Exams}}
+    <option value="{{.ID}}" {{if eq .ID $d.ExamID}}selected{{end}}>{{.ClassName}} - {{.Name}} ({{.Date}})</option>
+    {{end}}
+  </select>
+  <button type="submit">Load students</button>
+</form>
+{{else}}
+<p class="error">No exams are available to you yet. Teachers only see exams of classes where the admin has assigned them a subject.</p>
+{{end}}
+
+{{if $d.Exam}}
+  {{if $d.Rows}}
+  <form method="post" action="/remarks">
+    <input type="hidden" name="exam_id" value="{{$d.ExamID}}">
+    <p>A short comment for each student's report card, up to {{$d.MaxLength}} characters. Leave it empty for no remark.</p>
+    <table class="remarks-table" data-plain>
+      <tr><th>Roll</th><th>Name</th><th>Remark</th></tr>
+      {{range $d.Rows}}
+      <tr>
+        <td>{{.Roll}}</td>
+        <td>{{.Name}}</td>
+        <td><textarea name="remark_{{.StudentID}}" rows="2" maxlength="{{$d.MaxLength}}" aria-label="Remark for {{.Name}}">{{.Value}}</textarea></td>
+      </tr>
+      {{end}}
+    </table>
+    <button type="submit">Save remarks</button>
+  </form>
+  {{else}}
+  <p class="muted">There are no students in this class yet.</p>
+  {{end}}
+{{end}}
+{{end}}
