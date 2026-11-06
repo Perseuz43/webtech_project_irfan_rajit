@@ -96,6 +96,12 @@ func main() {
     mux.Handle("GET /dashboard", login(app.Dashboard))
     mux.Handle("GET /notices", login(app.NoticeList))
     mux.Handle("GET /timetable", login(app.Timetable))
+    mux.Handle("GET /homework", login(app.HomeworkList))
+    mux.Handle("GET /homework/new", staff(app.HomeworkNewForm))
+    mux.Handle("POST /homework", staff(app.HomeworkCreate))
+    mux.Handle("GET /homework/{id}/edit", staff(app.HomeworkEditForm))
+    mux.Handle("POST /homework/{id}", staff(app.HomeworkUpdate))
+    mux.Handle("POST /homework/{id}/delete", staff(app.HomeworkDelete))
     mux.Handle("GET /account/password", login(app.PasswordForm))
     mux.Handle("POST /account/password", login(app.PasswordChange))
 
@@ -222,6 +228,7 @@ func main() {
     // parents: only their own linked children
     mux.Handle("GET /children/{id}/attendance", parent(app.ChildAttendance))
     mux.Handle("GET /children/{id}/timetable", parent(app.ChildTimetable))
+    mux.Handle("GET /children/{id}/homework", parent(app.ChildHomework))
     mux.Handle("GET /children/{id}/results", parent(app.ChildResults))
     mux.Handle("GET /children/{id}/results/{eid}", parent(app.ChildReportCard))
     mux.Handle("GET /children/{id}/fees", parent(app.ChildFees))

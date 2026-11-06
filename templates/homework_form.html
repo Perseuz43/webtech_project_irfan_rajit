@@ -1,0 +1,33 @@
+{{define "content"}}
+{{$d := .Data}}
+<h2>{{if $d.Edit}}Edit homework{{else}}Post homework{{end}}</h2>
+<p><a href="/homework">&larr; Homework</a></p>
+{{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
+
+{{if and (not $d.Edit) (not $d.Subjects)}}
+<p class="error">You have no subjects yet, so there is nothing to post homework for. Ask the administrator to assign subjects to you (Teachers &rarr; Edit).</p>
+{{else}}
+<form method="post" action="{{if $d.Edit}}/homework/{{$d.ID}}{{else}}/homework{{end}}" class="card wide">
+  {{if $d.Edit}}
+  <p><strong>{{$d.ClassName}}</strong> | {{$d.SubjectName}}</p>
+  {{else}}
+  <label for="subject_id">Class and subject</label>
+  <select name="subject_id" id="subject_id" required>
+    <option value="">Choose...</option>
+    {{range $d.Subjects}}<option value="{{.SubjectID}}" {{if eq $d.SubjectID .SubjectID}}selected{{end}}>{{.ClassName}} - {{.SubjectName}}</option>{{end}}
+  </select>
+  {{end}}
+
+  <label for="title">Title</label>
+  <input type="text" id="title" name="title" value="{{$d.Title}}" maxlength="{{$d.MaxTitle}}" required placeholder="For example: Exercise 4, questions 1 to 10">
+
+  <label for="details">Details (optional)</label>
+  <textarea id="details" name="details" rows="5" maxlength="{{$d.MaxDetails}}" placeholder="Instructions, page numbers, what to bring...">{{$d.Details}}</textarea>
+
+  <label for="due_date">Due date</label>
+  <input type="date" id="due_date" name="due_date" value="{{$d.DueDate}}" required>
+
+  <button type="submit">{{if $d.Edit}}Save changes{{else}}Post homework{{end}}</button>
+</form>
+{{end}}
+{{end}}

@@ -114,3 +114,15 @@ td.thumb-cell { width: 1%; padding-right: 0; }
 .lesson-list li { display: grid; grid-template-columns: 9rem 1fr; gap: 0.75rem; align-items: baseline; padding: 0.5rem 0.2rem; border-bottom: 1px solid var(--border); }
 .lesson-time { font-weight: 600; }
 .lesson-time small { display: block; font-weight: 400; color: var(--muted); }
+
+/* ---------- homework ---------- */
+.hw-list { display: grid; gap: 0.75rem; margin: 1rem 0; max-width: 760px; }
+.hw-card { padding: 0.9rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.hw-card p { margin: 0.4rem 0 0; }
+.hw-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.hw-details { white-space: pre-line; }
+.hw-flag { color: var(--danger); font-weight: 700; }
+.hw-actions { display: flex; align-items: center; gap: 0.75rem; }
+.hw-past { margin: 1.5rem 0; max-width: 760px; }
+.hw-past summary { cursor: pointer; color: var(--muted); margin-bottom: 0.75rem; }
+.hw-done { opacity: 0.75; margin-bottom: 0.6rem; }

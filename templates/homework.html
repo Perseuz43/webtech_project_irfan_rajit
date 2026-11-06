@@ -1,0 +1,65 @@
+{{define "content"}}
+{{$d := .Data}}
+<div class="page-head"><h2>{{$d.Heading}}</h2></div>
+<p><a href="{{$d.Back}}">&larr; Back</a>{{if $d.Staff}} | <a href="/homework/new" class="button">Post homework</a>{{end}}</p>
+
+{{if $d.Staff}}{{if $d.Classes}}
+<form method="get" action="/homework" class="inline-form">
+  <select name="class_id" aria-label="Class">
+    <option value="">All my classes</option>
+    {{range $d.Classes}}<option value="{{.ID}}" {{if eq $d.ClassID .ID}}selected{{end}}>{{.Name}}</option>{{end}}
+  </select>
+  <button type="submit">Show</button>
+</form>
+{{end}}{{end}}
+
+{{if $d.Upcoming}}
+<div class="hw-list">
+  {{range $d.Upcoming}}
+  <article class="hw-card">
+    <div class="hw-head">
+      <strong>{{.Title}}</strong>
+      <span class="pill">{{.SubjectName}}</span>
+      {{if $d.Staff}}<span class="pill">{{.ClassName}}</span>{{end}}
+    </div>
+    {{if .Details}}<p class="hw-details">{{.Details}}</p>{{end}}
+    <p class="muted small">Due <strong>{{.DueDate}}</strong>{{if eq .DueDate $d.Today}} <span class="hw-flag">today</span>{{end}}{{if .PosterName}} | by {{.PosterName}}{{end}}</p>
+    {{if .Editable}}
+    <p class="hw-actions">
+      <a href="/homework/{{.ID}}/edit">Edit</a>
+      <form method="post" action="/homework/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this homework?')"><button type="submit" class="danger">Delete</button></form>
+    </p>
+    {{end}}
+  </article>
+  {{end}}
+</div>
+{{else}}
+<div class="empty-state">
+  <div class="empty-icon" aria-hidden="true">📚</div>
+  <h3>No homework due</h3>
+  <p class="muted">{{if $d.Staff}}Post homework and your students and their parents will see it here.{{else}}Nothing is due. Enjoy the free time!{{end}}</p>
+  {{if $d.Staff}}<a href="/homework/new" class="button">Post homework</a>{{end}}
+</div>
+{{end}}
+
+{{if $d.Past}}
+<details class="hw-past">
+  <summary>Finished in the last two weeks ({{len $d.Past}})</summary>
+  {{range $d.Past}}
+  <article class="hw-card hw-done">
+    <div class="hw-head">
+      <strong>{{.Title}}</strong>
+      <span class="pill">{{.SubjectName}}</span>
+      {{if $d.Staff}}<span class="pill">{{.ClassName}}</span>{{end}}
+    </div>
+    <p class="muted small">Was due {{.DueDate}}</p>
+    {{if .Editable}}
+    <p class="hw-actions">
+      <form method="post" action="/homework/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this homework?')"><button type="submit" class="danger">Delete</button></form>
+    </p>
+    {{end}}
+  </article>
+  {{end}}
+</details>
+{{end}}
+{{end}}

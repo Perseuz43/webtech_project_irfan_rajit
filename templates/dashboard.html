@@ -13,6 +13,7 @@
   <div class="tiles">
     <a class="tile" href="/students"><strong>My students</strong><span>Students and parent contacts</span></a>
     <a class="tile" href="/timetable"><strong>My timetable</strong><span>Your lessons this week</span></a>
+    <a class="tile" href="/homework"><strong>Homework</strong><span>Post and manage homework</span></a>
     <a class="tile" href="/attendance"><strong>Take attendance</strong><span>Mark a class for any date</span></a>
     <a class="tile" href="/attendance/report"><strong>Attendance report</strong><span>Totals by class and date range</span></a>
     <a class="tile" href="/marks"><strong>Enter marks</strong><span>Marks for your subjects</span></a>
@@ -24,6 +25,7 @@
 {{if eq .User.Role "student"}}
   <div class="tiles">
     <a class="tile" href="/timetable"><strong>My timetable</strong><span>Your class's weekly lessons</span></a>
+    <a class="tile" href="/homework"><strong>Homework</strong><span>What is due</span></a>
     <a class="tile" href="/my-attendance"><strong>My attendance</strong><span>Your records and percentage</span></a>
     <a class="tile" href="/my-results"><strong>My results</strong><span>Published report cards</span></a>
     <a class="tile" href="/my-fees"><strong>My fees</strong><span>Bills, payments and receipts</span></a>
@@ -32,6 +34,21 @@
 
 {{with .Data}}
   {{$d := .}}
+
+  {{if .HomeworkDue}}
+  <div class="dash-section-head">
+    <h3>Homework due soon</h3>
+    <a href="/homework">All homework</a>
+  </div>
+  <ul class="lesson-list">
+    {{range .HomeworkDue}}
+    <li>
+      <span class="lesson-time">{{.DueDate}}</span>
+      <span><strong>{{.Title}}</strong> <span class="muted">{{.SubjectName}}</span></span>
+    </li>
+    {{end}}
+  </ul>
+  {{end}}
 
   {{if .TodayLessons}}
   <div class="dash-section-head">
@@ -134,6 +151,7 @@
       <div class="tile-links">
         <a href="/children/{{.ID}}/attendance">Attendance</a>
         <a href="/children/{{.ID}}/timetable">Timetable</a>
+        <a href="/children/{{.ID}}/homework">Homework</a>
         <a href="/children/{{.ID}}/results">Results</a>
         <a href="/children/{{.ID}}/fees">Fees</a>
       </div>
