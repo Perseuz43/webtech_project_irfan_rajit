@@ -53,6 +53,8 @@
     {{if $c.Scale.Bands}}<tr><th>Overall grade</th><td>{{$c.Grade}}</td></tr>{{end}}
     {{if $c.Scale.UseGPA}}<tr><th>GPA</th><td>{{if $c.HasGPA}}{{printf "%.2f" $c.GPA}}{{else}}-{{end}}</td></tr>{{end}}
     <tr><th>Result</th><td class="res-{{$c.Status}}">{{$c.Status}}</td></tr>
+    {{if $c.HasRank}}<tr><th>Class position</th><td>{{$c.RankText}}</td></tr>{{end}}
+    {{if $c.HasAttendance}}<tr><th>Attendance</th><td>{{printf "%.1f" $c.AttPercent}}% ({{$c.AttAttended}} of {{$c.AttTotal}} days) <span class="muted small">up to the exam date</span></td></tr>{{end}}
   </table>
 
   {{if $c.Remark}}
@@ -62,7 +64,7 @@
   </div>
   {{end}}
 
-  <p class="muted small">Grading system: {{$c.Scale.Name}}. Pass mark: {{printf "%g" $c.Scale.PassPercent}}%.</p>
+  <p class="muted small">Grading system: {{$c.Scale.Name}}. Pass mark: {{printf "%g" $c.Scale.PassPercent}}%.{{if $c.HasRank}} Position counts only students whose marks are complete; equal percentages share a position.{{end}}</p>
 
   <div class="doc-sign">
     <div><span class="sign-line"></span>Class teacher</div>

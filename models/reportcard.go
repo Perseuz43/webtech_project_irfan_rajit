@@ -26,6 +26,15 @@ type ReportCard struct {
     HasGPA     bool
     Status     string // Passed, Failed or Incomplete
     Remark     string // the teacher's remark, "" when there is none
+
+    HasRank bool // false when the marks are incomplete
+    Rank    int
+    RankOf  int
+
+    HasAttendance bool // false when no attendance was recorded up to the exam date
+    AttPercent    float64
+    AttAttended   int // present + late
+    AttTotal      int
 }
 
 // BuildReportCard works out grades, totals, GPA and the result using the given grading system.
@@ -96,6 +105,21 @@ func BuildReportCard(db *sql.DB, student *Student, exam *Exam, scale *GradingSca
 
     if rc.Remark, err = GetRemark(db, exam.ID, student.ID); err != nil {
         return nil, err
+    }
+
+    if rc.Rank, rc.RankOf, rc.HasRank, err = ClassRank(db, exam.ID, student.ID); err != nil {
+        return nil, err
+    }
+
+    att, err := AttendanceUpTo(db, student.ID, exam.Date)
+    if err != nil {
+        return nil, err
+    }
+    if att.Total > 0 {
+        rc.HasAttendance = true
+        rc.AttPercent = att.Percent
+        rc.AttAttended = att.Present + att.Late
+        rc.AttTotal = att.Total
     }
     return rc, nil
 }
