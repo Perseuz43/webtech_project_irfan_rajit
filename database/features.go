@@ -16,12 +16,16 @@ var detailsSchema string
 //go:embed schema_remarks.sql
 var remarksSchema string
 
+//go:embed schema_timetable.sql
+var timetableSchema string
+
 // MigrateFeatures creates the tables of the extra modules if they do not exist yet.
 func MigrateFeatures(db *sql.DB) error {
     steps := []string{
         photosSchema,
         detailsSchema,
         remarksSchema,
+        timetableSchema,
     }
     for _, s := range steps {
         if _, err := db.Exec(s); err != nil {

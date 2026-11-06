@@ -1,0 +1,75 @@
+{{define "content"}}
+{{$d := .Data}}
+<h2>Class timetable</h2>
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+{{if $d.Notice}}<p class="success">{{$d.Notice}}</p>{{end}}
+{{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
+
+{{if $d.Classes}}
+<form method="get" action="/admin/timetable" class="inline-form">
+  <select name="class_id" required aria-label="Class">
+    <option value="">Choose a class</option>
+    {{range $d.Classes}}<option value="{{.ID}}" {{if eq $d.ClassID .ID}}selected{{end}}>{{.Name}}</option>{{end}}
+  </select>
+  <button type="submit">Open timetable</button>
+</form>
+{{else}}
+<p class="error">There are no classes yet. <a href="/admin/classes">Create a class</a> first.</p>
+{{end}}
+
+{{if $d.Class}}
+  {{if not $d.Subjects}}
+  <p class="error">{{$d.Class.Name}} has no subjects yet. <a href="/admin/classes/{{$d.Class.ID}}">Add subjects</a> first, then build the timetable.</p>
+  {{else}}
+  <form method="post" action="/admin/timetable">
+    <input type="hidden" name="class_id" value="{{$d.Class.ID}}">
+    <p>Choose a subject (and, if you like, the teacher) for each period of <strong>{{$d.Class.Name}}</strong>. Leave a cell empty for a free period or a day off. A teacher cannot be in two classes at the same time.</p>
+    <div class="tt-scroll">
+      <table class="tt-grid" data-plain>
+        <tr>
+          <th>Period</th>
+          {{range $d.Days}}<th>{{.}}</th>{{end}}
+        </tr>
+        {{range $row := $d.Rows}}
+        <tr>
+          <th class="tt-period">P{{$row.Period}}{{if $row.Start}}<small>{{$row.Start}} - {{$row.End}}</small>{{end}}</th>
+          {{range $cell := $row.Cells}}
+          <td>
+            <select name="s_{{$cell.Day}}_{{$row.Period}}" aria-label="Subject, {{$row.Period}} period, day {{$cell.Day}}">
+              <option value="">-</option>
+              {{range $d.Subjects}}<option value="{{.ID}}" {{if eq .ID $cell.SubjectID}}selected{{end}}>{{.Name}}</option>{{end}}
+            </select>
+            <select name="t_{{$cell.Day}}_{{$row.Period}}" class="tt-teacher" aria-label="Teacher, {{$row.Period}} period, day {{$cell.Day}}">
+              <option value="">no teacher</option>
+              {{range $d.Teachers}}<option value="{{.ID}}" {{if eq .ID $cell.TeacherID}}selected{{end}}>{{.Name}}</option>{{end}}
+            </select>
+          </td>
+          {{end}}
+        </tr>
+        {{end}}
+      </table>
+    </div>
+    <button type="submit" data-loading="Saving timetable...">Save timetable</button>
+  </form>
+
+  <div class="card">
+    <h3>Period times</h3>
+    <p class="muted small">The clock times of each period. They are the same for every class. Leave a period empty to show only its number.</p>
+    <form method="post" action="/admin/timetable/periods">
+      <input type="hidden" name="class_id" value="{{$d.Class.ID}}">
+      <table class="tt-times" data-plain>
+        <tr><th>Period</th><th>Starts</th><th>Ends</th></tr>
+        {{range $d.Rows}}
+        <tr>
+          <td>P{{.Period}}</td>
+          <td><input type="time" name="start_{{.Period}}" value="{{.Start}}" aria-label="Period {{.Period}} starts"></td>
+          <td><input type="time" name="end_{{.Period}}" value="{{.End}}" aria-label="Period {{.Period}} ends"></td>
+        </tr>
+        {{end}}
+      </table>
+      <button type="submit">Save period times</button>
+    </form>
+  </div>
+  {{end}}
+{{end}}
+{{end}}

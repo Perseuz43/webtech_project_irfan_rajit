@@ -153,6 +153,11 @@ func main() {
     mux.Handle("POST /admin/parents/{id}/children", admin(app.ParentChildren))
     mux.Handle("POST /admin/parents/{id}/delete", admin(app.ParentDelete))
 
+    // class timetable (admin edits)
+    mux.Handle("GET /admin/timetable", admin(app.TimetableEditor))
+    mux.Handle("POST /admin/timetable", admin(app.TimetableSave))
+    mux.Handle("POST /admin/timetable/periods", admin(app.TimetablePeriods))
+
     // grading systems and exams (admin)
     mux.Handle("GET /admin/grading", admin(app.GradingList))
     mux.Handle("POST /admin/grading/active", admin(app.GradingSetActive))

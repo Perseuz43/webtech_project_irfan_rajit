@@ -92,3 +92,13 @@ td.thumb-cell { width: 1%; padding-right: 0; }
 .remarks-table textarea { width: 100%; min-width: 260px; resize: vertical; }
 .report-remark { margin: 1.25rem 0; padding: 0.75rem 1rem; border: 1px solid var(--border); border-left: 4px solid var(--btn); border-radius: 6px; break-inside: avoid; }
 .report-remark p { margin: 0.35rem 0 0; }
+
+/* ---------- class timetable ---------- */
+.tt-scroll { overflow-x: auto; margin: 1rem 0; }
+.tt-grid { min-width: 860px; }
+.tt-grid td { padding: 0.35rem; vertical-align: top; }
+.tt-grid select { width: 100%; margin: 0 0 0.25rem; font-size: 0.85rem; padding: 0.35rem 0.4rem; }
+.tt-grid select.tt-teacher { color: var(--muted); font-size: 0.78rem; margin-bottom: 0; }
+.tt-grid th.tt-period { white-space: nowrap; }
+.tt-grid th.tt-period small { display: block; font-weight: 400; color: var(--muted); }
+.tt-times input[type="time"] { width: auto; }
