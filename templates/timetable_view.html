@@ -1,0 +1,32 @@
+{{define "content"}}
+{{$d := .Data}}
+<h2>{{$d.Heading}}</h2>
+<p><a href="{{$d.Back}}">&larr; Back</a></p>
+
+{{if $d.Rows}}
+<div class="tt-scroll">
+  <table class="tt-view" data-plain>
+    <tr>
+      <th>Period</th>
+      {{range $d.Days}}<th{{if .Today}} class="is-today"{{end}}>{{.Name}}{{if .Today}}<small>today</small>{{end}}</th>{{end}}
+    </tr>
+    {{range $d.Rows}}
+    <tr>
+      <th class="tt-period">P{{.Period}}{{if .Start}}<small>{{.Start}} - {{.End}}</small>{{end}}</th>
+      {{range $i, $c := .Cells}}
+      <td{{with index $d.Days $i}}{{if .Today}} class="is-today"{{end}}{{end}}>
+        {{if $c.Subject}}<strong>{{$c.Subject}}</strong>{{if $c.Detail}}<span class="tt-detail">{{$c.Detail}}</span>{{end}}{{else}}<span class="muted">-</span>{{end}}
+      </td>
+      {{end}}
+    </tr>
+    {{end}}
+  </table>
+</div>
+{{else}}
+<div class="empty-state">
+  <div class="empty-icon" aria-hidden="true">🗓️</div>
+  <h3>No timetable yet</h3>
+  <p class="muted">The school has not set up this timetable. It will appear here once the administrator adds it.</p>
+</div>
+{{end}}
+{{end}}

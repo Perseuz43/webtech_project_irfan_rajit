@@ -12,6 +12,7 @@
 {{if eq .User.Role "teacher"}}
   <div class="tiles">
     <a class="tile" href="/students"><strong>My students</strong><span>Students and parent contacts</span></a>
+    <a class="tile" href="/timetable"><strong>My timetable</strong><span>Your lessons this week</span></a>
     <a class="tile" href="/attendance"><strong>Take attendance</strong><span>Mark a class for any date</span></a>
     <a class="tile" href="/attendance/report"><strong>Attendance report</strong><span>Totals by class and date range</span></a>
     <a class="tile" href="/marks"><strong>Enter marks</strong><span>Marks for your subjects</span></a>
@@ -22,6 +23,7 @@
 
 {{if eq .User.Role "student"}}
   <div class="tiles">
+    <a class="tile" href="/timetable"><strong>My timetable</strong><span>Your class's weekly lessons</span></a>
     <a class="tile" href="/my-attendance"><strong>My attendance</strong><span>Your records and percentage</span></a>
     <a class="tile" href="/my-results"><strong>My results</strong><span>Published report cards</span></a>
     <a class="tile" href="/my-fees"><strong>My fees</strong><span>Bills, payments and receipts</span></a>
@@ -30,6 +32,21 @@
 
 {{with .Data}}
   {{$d := .}}
+
+  {{if .TodayLessons}}
+  <div class="dash-section-head">
+    <h3>Today's lessons</h3>
+    <a href="/timetable">Full timetable</a>
+  </div>
+  <ul class="lesson-list">
+    {{range .TodayLessons}}
+    <li>
+      <span class="lesson-time">P{{.Period}}{{with index $d.PeriodTimes .Period}}<small>{{.Start}} - {{.End}}</small>{{end}}</span>
+      <span><strong>{{.SubjectName}}</strong> <span class="muted">{{if eq $.User.Role "teacher"}}{{.ClassName}}{{else}}{{.TeacherName}}{{end}}</span></span>
+    </li>
+    {{end}}
+  </ul>
+  {{end}}
 
   {{with .MyBirthday}}
   <div class="birthday-banner"><span aria-hidden="true">🎉</span> <strong>Happy birthday, {{.Name}}!</strong> You turn {{.Turning}} today.</div>
@@ -116,6 +133,7 @@
       <span>{{if .ClassName}}{{.ClassName}}{{end}}{{if .SectionName}} {{.SectionName}}{{end}} | Roll {{.Roll}}</span>
       <div class="tile-links">
         <a href="/children/{{.ID}}/attendance">Attendance</a>
+        <a href="/children/{{.ID}}/timetable">Timetable</a>
         <a href="/children/{{.ID}}/results">Results</a>
         <a href="/children/{{.ID}}/fees">Fees</a>
       </div>

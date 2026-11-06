@@ -80,6 +80,21 @@ func ListClassSlots(db *sql.DB, classID int) ([]Slot, error) {
     return querySlots(db, slotSelect+" WHERE ts.class_id = ? ORDER BY ts.day, ts.period", classID)
 }
 
+// ListTeacherSlots returns every lesson a teacher gives, in week order.
+func ListTeacherSlots(db *sql.DB, teacherID int) ([]Slot, error) {
+    return querySlots(db, slotSelect+" WHERE ts.teacher_id = ? ORDER BY ts.day, ts.period", teacherID)
+}
+
+// ListClassSlotsOnDay returns one class's lessons for a single weekday (0 = Sunday).
+func ListClassSlotsOnDay(db *sql.DB, classID, day int) ([]Slot, error) {
+    return querySlots(db, slotSelect+" WHERE ts.class_id = ? AND ts.day = ? ORDER BY ts.period", classID, day)
+}
+
+// ListTeacherSlotsOnDay returns one teacher's lessons for a single weekday (0 = Sunday).
+func ListTeacherSlotsOnDay(db *sql.DB, teacherID, day int) ([]Slot, error) {
+    return querySlots(db, slotSelect+" WHERE ts.teacher_id = ? AND ts.day = ? ORDER BY ts.period", teacherID, day)
+}
+
 // SaveClassTimetable replaces a class's whole timetable. If a teacher is already teaching
 // another class in the same period, nothing is saved and a *ConflictError is returned.
 func SaveClassTimetable(db *sql.DB, classID int, slots []SlotInput) error {

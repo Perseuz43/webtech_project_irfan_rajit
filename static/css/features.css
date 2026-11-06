@@ -102,3 +102,15 @@ td.thumb-cell { width: 1%; padding-right: 0; }
 .tt-grid th.tt-period { white-space: nowrap; }
 .tt-grid th.tt-period small { display: block; font-weight: 400; color: var(--muted); }
 .tt-times input[type="time"] { width: auto; }
+
+/* ---------- timetable views ---------- */
+.tt-view { min-width: 560px; }
+.tt-view td { vertical-align: top; }
+.tt-view th small, .tt-view .tt-period small { display: block; font-weight: 400; color: var(--muted); }
+.tt-detail { display: block; font-size: 0.82rem; color: var(--muted); }
+.tt-view th.is-today, .tt-view td.is-today { background: rgba(37, 99, 235, 0.10); }
+.tt-view th.is-today small { color: var(--btn); font-weight: 600; }
+.lesson-list { list-style: none; margin: 0.5rem 0 1.25rem; padding: 0; max-width: 760px; }
+.lesson-list li { display: grid; grid-template-columns: 9rem 1fr; gap: 0.75rem; align-items: baseline; padding: 0.5rem 0.2rem; border-bottom: 1px solid var(--border); }
+.lesson-time { font-weight: 600; }
+.lesson-time small { display: block; font-weight: 400; color: var(--muted); }

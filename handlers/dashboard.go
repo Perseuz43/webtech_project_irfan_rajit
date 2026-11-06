@@ -18,6 +18,9 @@ type DashboardData struct {
     Birthdays      []models.BirthdayEntry // admins and teachers: the coming week
     MyBirthday     *models.BirthdayEntry  // a student whose birthday is today
     ChildBirthdays []models.BirthdayEntry // a parent's children whose birthday is today
+
+    TodayLessons []models.Slot              // a student's or teacher's lessons today
+    PeriodTimes  map[int]models.PeriodTime // clock times for those periods
 }
 
 // Dashboard shows different content depending on the logged-in user's role.
@@ -69,6 +72,10 @@ func (a *App) Dashboard(w http.ResponseWriter, r *http.Request) {
         }
     }
 
+    if err := a.lessonsToday(u, &data); err != nil {
+        a.serverError(w, err)
+        return
+    }
     if err := a.loadBirthdays(u, &data); err != nil {
         a.serverError(w, err)
         return
