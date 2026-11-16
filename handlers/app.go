@@ -10,6 +10,8 @@ import (
     "strings"
 
     "github.com/alexedwards/scs/v2"
+
+    "github.com/Perseuz43/webtech_project_irfan_rajit/models"
 )
 
 type App struct {
@@ -32,6 +34,9 @@ type PageData struct {
     Theme  string
     Path   string
     School SchoolInfo
+
+    Years       []models.AcademicYear // admins: every academic year, for the menu bar
+    WorkingYear *models.AcademicYear  // admins: the year they are viewing (nil = all years)
 }
 
 // New parses every page in the templates folder together with the shared layout.
@@ -81,6 +86,9 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, page string, status
     data.Theme = a.themeFor(r)
     data.Path = r.URL.Path
     data.School = a.schoolInfo()
+    if data.User != nil && data.User.Role == "admin" {
+        data.Years, data.WorkingYear = a.workingYear(r)
+    }
 
     var buf bytes.Buffer
     if err := tmpl.ExecuteTemplate(&buf, "base", data); err != nil {

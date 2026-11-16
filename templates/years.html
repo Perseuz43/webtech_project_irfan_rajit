@@ -1,0 +1,43 @@
+{{define "content"}}
+{{$d := .Data}}
+<h2>Academic years</h2>
+<p><a href="/dashboard">&larr; Dashboard</a></p>
+{{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
+
+<p class="muted">A year is a range of dates. Exams, fees and attendance belong to the year that contains their date, so nothing has to be moved when a new year starts. Admins pick the year they are working in from the menu bar.</p>
+
+{{if $d.Years}}
+<table data-plain>
+  <tr><th>Year</th><th>From</th><th>To</th><th></th><th>Actions</th></tr>
+  {{range $d.Years}}
+  <tr>
+    <td><strong>{{.Name}}</strong></td>
+    <td>{{.StartDate}}</td>
+    <td>{{.EndDate}}</td>
+    <td>{{if .IsCurrent}}<span class="pill">Current</span>{{end}}</td>
+    <td class="actions">
+      {{if not .IsCurrent}}<form method="post" action="/admin/years/{{.ID}}/current" class="inline"><button type="submit">Make current</button></form>{{end}}
+      <form method="post" action="/admin/years/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete the year {{.Name}}? Your exams, fees and attendance are NOT deleted.')"><button type="submit" class="danger">Delete</button></form>
+    </td>
+  </tr>
+  {{end}}
+</table>
+{{else}}
+<div class="empty-state">
+  <div class="empty-icon" aria-hidden="true">🗓️</div>
+  <h3>No academic years yet</h3>
+  <p class="muted">Add your first year below. Until you do, every exam, fee and report shows all dates together.</p>
+</div>
+{{end}}
+
+<form method="post" action="/admin/years" class="card wide">
+  <h3>Add a year</h3>
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" value="{{$d.Name}}" maxlength="30" required placeholder="2026 or 2026-27">
+  <label for="start_date">First day</label>
+  <input type="date" id="start_date" name="start_date" value="{{$d.Start}}" required>
+  <label for="end_date">Last day</label>
+  <input type="date" id="end_date" name="end_date" value="{{$d.End}}" required>
+  <button type="submit">Add year</button>
+</form>
+{{end}}
