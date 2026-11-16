@@ -75,6 +75,7 @@ func (a *App) DuesExport(w http.ResponseWriter, r *http.Request) {
         a.serverError(w, err)
         return
     }
+    dues = a.duesInYear(r, dues)
     rows := make([][]string, 0, len(dues))
     for _, c := range dues {
         overdue := "no"

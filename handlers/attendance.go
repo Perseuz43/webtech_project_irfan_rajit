@@ -274,6 +274,9 @@ func (a *App) AttendanceReport(w http.ResponseWriter, r *http.Request) {
         From:     time.Now().Format("2006-01") + "-01",
         To:       today(),
     }
+    if _, y := a.workingYear(r); y != nil {
+        d.From, d.To = yearDates(y, today())
+    }
     if q.Get("class_id") == "" {
         a.render(w, r, "attendance_report", http.StatusOK, PageData{Title: "Attendance report", Data: d})
         return

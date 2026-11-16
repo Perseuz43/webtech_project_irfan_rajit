@@ -35,6 +35,7 @@ func (a *App) renderExamList(w http.ResponseWriter, r *http.Request, status int,
         a.serverError(w, err)
         return
     }
+    exams = a.examsInYear(r, exams)
     classes, err := models.ListClasses(a.DB)
     if err != nil {
         a.serverError(w, err)

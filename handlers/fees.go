@@ -68,6 +68,7 @@ func (a *App) renderFeeList(w http.ResponseWriter, r *http.Request, status int, 
         a.serverError(w, err)
         return
     }
+    fees = a.feesInYear(r, fees)
     classes, err := models.ListClasses(a.DB)
     if err != nil {
         a.serverError(w, err)
@@ -350,6 +351,7 @@ func (a *App) DuesReport(w http.ResponseWriter, r *http.Request) {
         a.serverError(w, err)
         return
     }
+    rows = a.duesInYear(r, rows)
     var total models.Money
     for _, c := range rows {
         total += c.Due

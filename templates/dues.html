@@ -2,6 +2,7 @@
 {{$d := .Data}}
 <div class="page-head"><h2>Dues report</h2></div>
 <p><a href="/admin/fees">&larr; Fees</a></p>
+{{template "yearNote" .}}
 
 <form method="get" action="/admin/dues" class="inline-form wrap">
   <select name="class_id">

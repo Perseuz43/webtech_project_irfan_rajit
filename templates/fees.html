@@ -2,6 +2,7 @@
 {{$d := .Data}}
 <div class="page-head"><h2>Fees</h2></div>
 <p><a href="/admin/dues">Dues report</a></p>
+{{template "yearNote" .}}
 {{if .Error}}<p class="error">{{.Error}}</p>{{end}}
 
 <form method="post" action="/admin/fees" class="inline-form wrap">
@@ -35,7 +36,7 @@
 {{else}}
 <div class="empty-state">
   <div class="empty-icon" aria-hidden="true">💰</div>
-  <h3>No fees yet</h3>
+  <h3>{{if $.WorkingYear}}No fees due in {{$.WorkingYear.Name}}{{else}}No fees yet{{end}}</h3>
   <p class="muted">Fees you create will be listed here, ready for billing.</p>
 </div>
 {{end}}

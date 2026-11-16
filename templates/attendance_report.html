@@ -2,6 +2,7 @@
 {{$d := .Data}}
 <h2>Attendance report</h2>
 <p><a href="/dashboard">&larr; Dashboard</a> &nbsp;|&nbsp; <a href="/attendance">Take attendance</a></p>
+{{template "yearNote" .}}
 {{if .Error}}<p class="error">{{.Error}}</p>{{end}}
 
 {{if $d.Classes}}

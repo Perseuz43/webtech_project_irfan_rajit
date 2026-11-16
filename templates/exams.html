@@ -2,6 +2,7 @@
 {{$d := .Data}}
 <div class="page-head"><h2>Exams</h2></div>
 <p><a href="/admin/grading">Grading system</a> &nbsp;|&nbsp; <a href="/marks">Enter marks</a></p>
+{{template "yearNote" .}}
 {{if .Error}}<p class="error">{{.Error}}</p>{{end}}
 
 {{if $d.Classes}}
@@ -34,7 +35,7 @@
 {{else}}
 <div class="empty-state">
   <div class="empty-icon" aria-hidden="true">📝</div>
-  <h3>No exams yet</h3>
+  <h3>{{if $.WorkingYear}}No exams in {{$.WorkingYear.Name}}{{else}}No exams yet{{end}}</h3>
   <p class="muted">Exams you create will be listed here.</p>
 </div>
 {{end}}

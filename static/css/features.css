@@ -162,3 +162,6 @@ table.calendar td.is-today { background: rgba(37, 99, 235, 0.10); outline: 2px s
 .year-switch { margin: 0; display: flex; align-items: center; }
 .year-switch select { width: auto; padding: 0.3rem 0.5rem; font-size: 0.85rem; margin: 0; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.year-note { margin: 0.5rem 0 1rem; padding: 0.5rem 0.8rem; border-left: 4px solid var(--btn); background: var(--surface); border-radius: 4px; font-size: 0.9rem; }
+@media print { .year-switch { display: none; } }
