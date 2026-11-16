@@ -1,0 +1,27 @@
+{{define "content"}}
+{{$d := .Data}}
+<h2>{{if $d.Edit}}Edit event{{else}}Add event{{end}}</h2>
+<p><a href="/calendar">&larr; Calendar</a></p>
+{{if .Error}}<p class="error" role="alert">{{.Error}}</p>{{end}}
+
+<form method="post" action="{{if $d.Edit}}/admin/events/{{$d.ID}}{{else}}/admin/events{{end}}" class="card wide">
+  <label for="kind">Kind</label>
+  <select name="kind" id="kind">
+    {{range $d.Kinds}}<option value="{{.Value}}" {{if eq $d.Kind .Value}}selected{{end}}>{{.Label}}</option>{{end}}
+  </select>
+
+  <label for="title">Title</label>
+  <input type="text" id="title" name="title" value="{{$d.Title}}" maxlength="{{$d.MaxTitle}}" required placeholder="For example: Parent-teacher meeting">
+
+  <label for="start_date">Date</label>
+  <input type="date" id="start_date" name="start_date" value="{{$d.StartDate}}" required>
+
+  <label for="end_date">Last day (only for events that last several days)</label>
+  <input type="date" id="end_date" name="end_date" value="{{$d.EndDate}}">
+
+  <label for="details">Details (optional)</label>
+  <textarea id="details" name="details" rows="3" maxlength="{{$d.MaxDetails}}">{{$d.Details}}</textarea>
+
+  <button type="submit">{{if $d.Edit}}Save changes{{else}}Add to calendar{{end}}</button>
+</form>
+{{end}}

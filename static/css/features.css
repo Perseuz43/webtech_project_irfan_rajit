@@ -126,3 +126,34 @@ td.thumb-cell { width: 1%; padding-right: 0; }
 .hw-past { margin: 1.5rem 0; max-width: 760px; }
 .hw-past summary { cursor: pointer; color: var(--muted); margin-bottom: 0.75rem; }
 .hw-done { opacity: 0.75; margin-bottom: 0.6rem; }
+
+/* ---------- school calendar ---------- */
+.cal-nav { display: flex; align-items: center; gap: 0.75rem; margin: 0.5rem 0 1rem; flex-wrap: wrap; }
+.cal-title { font-size: 1.15rem; min-width: 9rem; text-align: center; }
+.cal-scroll { overflow-x: auto; }
+table.calendar { table-layout: fixed; min-width: 640px; }
+table.calendar th { text-align: center; }
+table.calendar td { height: 6.5rem; vertical-align: top; padding: 0.3rem; border: 1px solid var(--border); }
+table.calendar td.other-month { opacity: 0.45; }
+table.calendar td.is-today { background: rgba(37, 99, 235, 0.10); outline: 2px solid var(--btn); outline-offset: -2px; }
+.cal-day { font-weight: 600; margin-bottom: 0.2rem; }
+.cal-day a { text-decoration: none; color: inherit; }
+.cal-chip {
+  font-size: 0.74rem; line-height: 1.25; padding: 0.1rem 0.35rem; margin-bottom: 0.2rem;
+  border-radius: 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  background: rgba(37, 99, 235, 0.18); border-left: 3px solid #2563eb;
+}
+.cal-chip.ev-holiday { background: rgba(22, 163, 74, 0.18); border-left-color: #16a34a; }
+.cal-chip.ev-meeting { background: rgba(217, 119, 6, 0.20); border-left-color: #d97706; }
+.cal-chip.ev-exam { background: rgba(220, 38, 38, 0.16); border-left-color: #dc2626; }
+.cal-more { font-size: 0.72rem; color: var(--muted); }
+.event-list { list-style: none; margin: 0.5rem 0; padding: 0; max-width: 820px; }
+.event-list li { display: grid; grid-template-columns: 11rem 1fr auto; gap: 0.75rem; align-items: baseline; padding: 0.5rem 0.2rem; border-bottom: 1px solid var(--border); }
+.event-date { color: var(--muted); white-space: nowrap; }
+.event-details { display: block; white-space: pre-line; }
+.event-actions { display: flex; gap: 0.6rem; align-items: center; }
+.ev-pill-holiday { background: rgba(22, 163, 74, 0.18); }
+.ev-pill-meeting { background: rgba(217, 119, 6, 0.20); }
+.ev-pill-exam { background: rgba(220, 38, 38, 0.16); }
+@media (max-width: 640px) { .event-list li { grid-template-columns: 1fr; } }
+@media print { .cal-nav, .event-actions { display: none; } table.calendar td { height: 5rem; } }

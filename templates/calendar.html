@@ -1,0 +1,55 @@
+{{define "content"}}
+{{$d := .Data}}
+<div class="page-head">
+  <h2>School calendar</h2>
+  {{if $d.IsAdmin}}<a href="/admin/events/new" class="button">Add event</a>{{end}}
+</div>
+
+<div class="cal-nav no-print">
+  <a href="/calendar?month={{$d.PrevMonth}}" class="button secondary" aria-label="Previous month">&larr;</a>
+  <strong class="cal-title">{{$d.Title}}</strong>
+  <a href="/calendar?month={{$d.NextMonth}}" class="button secondary" aria-label="Next month">&rarr;</a>
+  {{if ne $d.Month $d.ThisMonth}}<a href="/calendar" class="button secondary">Today</a>{{end}}
+</div>
+
+<div class="cal-scroll">
+  <table class="calendar" data-plain>
+    <tr>{{range $d.Weekdays}}<th>{{.}}</th>{{end}}</tr>
+    {{range $d.Weeks}}
+    <tr>
+      {{range .}}
+      <td class="{{if not .InMonth}}other-month{{end}}{{if .Today}} is-today{{end}}">
+        <div class="cal-day">{{if $d.IsAdmin}}<a href="/admin/events/new?date={{.Date}}" title="Add an event on this day">{{.Day}}</a>{{else}}{{.Day}}{{end}}</div>
+        {{range .Events}}<div class="cal-chip ev-{{.Kind}}" title="{{.Title}}">{{.Title}}</div>{{end}}
+        {{if .More}}<div class="cal-more">+{{.More}} more</div>{{end}}
+      </td>
+      {{end}}
+    </tr>
+    {{end}}
+  </table>
+</div>
+
+<h3>In {{$d.Title}}</h3>
+{{if $d.Events}}
+<ul class="event-list">
+  {{range $d.Events}}
+  <li>
+    <span class="event-date">{{.StartDate}}{{if .MultiDay}} to {{.EndDate}}{{end}}</span>
+    <span>
+      <strong>{{.Title}}</strong> <span class="pill ev-pill-{{.Kind}}">{{.KindLabel}}</span>
+      {{if .Details}}<span class="muted small event-details">{{.Details}}</span>{{end}}
+    </span>
+    {{if and $d.IsAdmin (not .Auto)}}
+    <span class="event-actions">
+      <a href="/admin/events/{{.ID}}/edit">Edit</a>
+      <form method="post" action="/admin/events/{{.ID}}/delete" class="inline" onsubmit="return confirm('Delete this event?')"><button type="submit" class="danger">Delete</button></form>
+    </span>
+    {{end}}
+  </li>
+  {{end}}
+</ul>
+{{else}}
+<p class="muted">Nothing is planned this month.</p>
+{{end}}
+<p class="muted small">Exam dates appear here automatically from the Exams page.</p>
+{{end}}

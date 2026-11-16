@@ -19,6 +19,7 @@ type DashboardData struct {
     MyBirthday     *models.BirthdayEntry  // a student whose birthday is today
     ChildBirthdays []models.BirthdayEntry // a parent's children whose birthday is today
 
+    Coming       []models.Event             // the next few calendar events
     HomeworkDue  []models.Homework          // a student's next few pieces of homework
     TodayLessons []models.Slot              // a student's or teacher's lessons today
     PeriodTimes  map[int]models.PeriodTime // clock times for those periods
@@ -73,6 +74,10 @@ func (a *App) Dashboard(w http.ResponseWriter, r *http.Request) {
         }
     }
 
+    if err := a.comingUp(u, &data); err != nil {
+        a.serverError(w, err)
+        return
+    }
     if err := a.homeworkDueSoon(u, &data); err != nil {
         a.serverError(w, err)
         return
